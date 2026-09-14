@@ -1,0 +1,65 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import { site } from '../../data/site';
+import type { Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const copy = {
+  fr: {
+    title: 'Mentions légales | Appa Lanka',
+    description: 'Mentions légales du site appalanka.fr : éditeur, hébergeur, propriété intellectuelle et données personnelles.',
+    h1: 'Mentions légales',
+    sections: [
+      { h: 'Éditeur du site', p: [`Le site appalanka.fr est édité par ${site.legalName}, ${site.address.street}, ${site.address.postalCode} ${site.address.city}, France.`, `Téléphone : ${site.phone.display} – E-mail : ${site.email}.`, 'Forme juridique, capital social, numéro SIREN/SIRET et directeur de la publication : à compléter par le propriétaire du site.'] },
+      { h: 'Hébergement', p: ['Le site est hébergé par : à compléter (nom de l’hébergeur, adresse et téléphone).'] },
+      { h: 'Propriété intellectuelle', p: ['L’ensemble du site (textes, photographies, logo, illustrations) est protégé par le droit d’auteur. Toute reproduction, même partielle, est interdite sans autorisation écrite préalable d’Appa Lanka.'] },
+      { h: 'Données personnelles & cookies', p: ['Ce site ne collecte aucune donnée personnelle et n’utilise aucun cookie ni outil de mesure d’audience. Les liens vers Instagram, Facebook, TikTok, Google Maps, Waze, Apple Plans et le programme de fidélité renvoient vers des services tiers soumis à leurs propres politiques de confidentialité.', 'Pour toute question, vous pouvez nous écrire à l’adresse e-mail indiquée ci-dessus.'] },
+      { h: 'Alcool', p: ['L’abus d’alcool est dangereux pour la santé. À consommer avec modération. La vente d’alcool est interdite aux mineurs.'] },
+      { h: 'Crédits', p: ['Conception du site : Appa Lanka. Photographies : Appa Lanka.'] },
+    ],
+  },
+  en: {
+    title: 'Legal notice | Appa Lanka',
+    description: 'Legal notice for appalanka.fr: publisher, hosting, intellectual property and personal data.',
+    h1: 'Legal notice',
+    sections: [
+      { h: 'Publisher', p: [`The website appalanka.fr is published by ${site.legalName}, ${site.address.street}, ${site.address.postalCode} ${site.address.city}, France.`, `Phone: ${site.phone.intl} – E-mail: ${site.email}.`, 'Legal form, share capital, SIREN/SIRET number and publication director: to be completed by the site owner.'] },
+      { h: 'Hosting', p: ['The site is hosted by: to be completed (host name, address and phone number).'] },
+      { h: 'Intellectual property', p: ['The whole site (texts, photographs, logo, illustrations) is protected by copyright. Any reproduction, even partial, is prohibited without prior written permission from Appa Lanka.'] },
+      { h: 'Personal data & cookies', p: ['This site collects no personal data and uses no cookies or audience measurement tools. Links to Instagram, Facebook, TikTok, Google Maps, Waze, Apple Maps and the loyalty programme lead to third-party services governed by their own privacy policies.', 'For any question, you can write to the e-mail address above.'] },
+      { h: 'Alcohol', p: ['Alcohol abuse is dangerous for your health. Please drink responsibly. The sale of alcohol to minors is prohibited.'] },
+      { h: 'Credits', p: ['Website design: Appa Lanka. Photographs: Appa Lanka.'] },
+    ],
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.legal') },
+];
+---
+
+<Base lang={lang} routeKey="legal" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHeader lang={lang} title={copy.h1} crumbs={crumbs} />
+  <section class="section">
+    <div class="container prose">
+      {
+        copy.sections.map((s) => (
+          <>
+            <h2>{s.h}</h2>
+            {s.p.map((p) => <p>{p}</p>)}
+          </>
+        ))
+      }
+    </div>
+  </section>
+</Base>

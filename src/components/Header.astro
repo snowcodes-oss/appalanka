@@ -1,0 +1,171 @@
+---
+import Icon from './Icon.astro';
+import logo from '../assets/logo.svg';
+import { site } from '../data/site';
+import { useT, otherLang } from '../i18n/ui';
+import { localePath } from '../i18n/config.js';
+import type { RouteKey } from '../i18n/seo';
+import type { Lang } from '../data/menu';
+
+/**
+ * En-tête repris du site en ligne : fond transparent posé sur la bannière,
+ * logo à gauche, navigation discrète et icônes sociales à droite.
+ */
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey;
+}
+const { lang, routeKey } = Astro.props;
+const t = useT(lang);
+const other = otherLang(lang);
+const nav: Array<{ key: RouteKey; label: string }> = [
+  { key: 'home', label: t('nav.home') },
+  { key: 'menu', label: t('nav.menu') },
+  { key: 'cuisine', label: t('nav.cuisine') },
+  { key: 'events', label: t('nav.events') },
+  { key: 'contact', label: t('nav.contact') },
+];
+const socials = [
+  { href: site.social.instagram, icon: 'instagram', label: t('social.instagram') },
+  { href: site.social.facebook, icon: 'facebook', label: t('social.facebook') },
+  { href: site.social.tiktok, icon: 'tiktok', label: t('social.tiktok') },
+] as const;
+---
+
+<header class="site-header" id="site-header">
+  <div class="container">
+    <a class="brand" href={localePath(lang, 'home')} aria-label={`${site.name} – ${t('nav.home')}`}>
+      <img src={logo.src} width="278" height="120" alt={site.name} fetchpriority="high" />
+    </a>
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      aria-label={t('nav.open')}
+      data-nav-toggle
+      data-open-label={t('nav.open')}
+      data-close-label={t('nav.close')}
+    >
+      <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label={t('nav.label')}>
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={localePath(lang, item.key)} aria-current={item.key === routeKey ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a class="nav-phone" href={`tel:${site.phone.tel}`} aria-label={`${t('cta.call')} ${site.phone.display}`}>
+            <Icon name="phone" />
+            {site.phone.display}
+          </a>
+        </li>
+        <li>
+          <ul class="nav-social">
+            {
+              socials.map((s) => (
+                <li>
+                  <a class="social-link" href={s.href} rel="noopener" target="_blank" aria-label={s.label}>
+                    <Icon name={s.icon} />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+        <li>
+          <a
+            class="lang-switch"
+            href={localePath(other, routeKey)}
+            hreflang={other}
+            lang={other}
+            aria-label={t('lang.switch')}
+            title={t('lang.switch')}
+          >
+            {t('lang.short')}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<noscript
+  ><style>
+    .site-nav {
+      display: block !important;
+      position: static !important;
+      inset: auto !important;
+    }
+    .nav-toggle {
+      display: none !important;
+    }
+  </style></noscript
+>
+<script is:inline>
+  (function () {
+    var h = document.getElementById('site-header');
+    var nav = document.getElementById('site-nav');
+    var b = h && h.querySelector('[data-nav-toggle]');
+    if (!h || !nav || !b) return;
+    var mq = window.matchMedia('(max-width: 68rem)');
+    var root = document.documentElement;
+
+    function measure() {
+      root.style.setProperty('--header-h', h.offsetHeight + 'px');
+    }
+
+    // Resolved on each call: this script runs while parsing the header, so
+    // <main> and the footer do not exist yet at definition time.
+    function set(open) {
+      if (open) h.setAttribute('data-open', '');
+      else h.removeAttribute('data-open');
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      b.setAttribute('aria-label', open ? b.dataset.closeLabel : b.dataset.openLabel);
+      document.body.classList.toggle('nav-open', open);
+      var aside = [document.getElementById('main'), document.querySelector('.site-footer'), document.querySelector('.skip-link')];
+      for (var i = 0; i < aside.length; i++) if (aside[i]) aside[i].inert = open;
+    }
+
+    function close() {
+      if (h.hasAttribute('data-open')) set(false);
+    }
+
+    measure();
+    // Keeps --header-h accurate whatever changes the bar's height
+    // (viewport, font loading, wrapping).
+    if (window.ResizeObserver) new ResizeObserver(measure).observe(h);
+    else window.addEventListener('resize', measure);
+
+    // Leaving the burger range (rotation, window resize) must never leave the
+    // page stuck behind an open panel that can no longer be closed.
+    if (mq.addEventListener) mq.addEventListener('change', function (e) { if (!e.matches) close(); });
+    window.addEventListener('resize', function () { if (!mq.matches) close(); });
+    window.addEventListener('orientationchange', function () { if (!mq.matches) close(); });
+
+    b.addEventListener('click', function () {
+      var open = !h.hasAttribute('data-open');
+      set(open);
+      if (open) {
+        var first = nav.querySelector('a');
+        if (first) first.focus();
+      }
+    });
+
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) close();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && h.hasAttribute('data-open')) {
+        close();
+        b.focus();
+      }
+    });
+  })();
+</script>

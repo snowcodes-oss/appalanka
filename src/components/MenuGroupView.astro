@@ -1,0 +1,74 @@
+---
+import MenuCards from './MenuCards.astro';
+import { formatPrice, type MenuGroup, type Lang } from '../data/menu';
+import { useT } from '../i18n/ui';
+
+interface Props {
+  group: MenuGroup;
+  lang: Lang;
+}
+const { group, lang } = Astro.props;
+const t = useT(lang);
+const tagLabel = { sl: t('tags.sl'), veg: t('tags.veg'), clarified: t('tags.clarified') };
+const tagShort = { sl: '🇱🇰', veg: 'V', clarified: '✦' };
+---
+
+<section class="menu-group section--tight" id={group.id} aria-labelledby={`${group.id}-title`}>
+  <div class="menu-group__header">
+    <h2 id={`${group.id}-title`}>{group.title[lang]}</h2>
+    <p class="menu-group__subtitle">{group.subtitle[lang]}</p>
+    <p class="lead">{group.intro[lang]}</p>
+  </div>
+  <div class="grid grid--2">
+    {
+      group.sections.map((section) => (
+        <div class="menu-section" id={section.id}>
+          <h3>{section.title[lang]}</h3>
+          {section.intro && <p class="menu-section__intro">{section.intro[lang]}</p>}
+          {section.columns ? (
+            <div class="menu-cols" style={`--cols:${section.columns.length}`}>
+              <div class="menu-cols__head">
+                <span />
+                {section.columns.map((c) => <span>{c[lang]}</span>)}
+              </div>
+              {section.items.map((item) => (
+                <div class="menu-item">
+                  <span class="menu-item__name">{item.name[lang]}</span>
+                  {(item.prices ?? []).map((p) => (
+                    <span class="menu-item__price">{p === null ? '–' : formatPrice(p, lang)}</span>
+                  ))}
+                  {item.desc ? <p class="menu-item__desc">{item.desc[lang]}</p> : <span class="menu-item__spacer" />}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <ul class="menu-list">
+              {section.items.map((item) => (
+                <li class="menu-item">
+                  <span class="menu-item__name">
+                    {item.name[lang]}
+                    {item.tags?.map((tag) => (
+                      <span class={`tag tag--${tag}`} title={tagLabel[tag]}>
+                        <span aria-hidden="true">{tagShort[tag]}</span>
+                        <span class="visually-hidden">{tagLabel[tag]}</span>
+                      </span>
+                    ))}
+                  </span>
+                  {item.price !== undefined && <span class="menu-item__price">{formatPrice(item.price, lang)}</span>}
+                  {item.desc && <p class="menu-item__desc">{item.desc[lang]}</p>}
+                  {item.alt && (
+                    <p class="menu-item__alt">
+                      {item.alt.label[lang]} : {formatPrice(item.alt.price, lang)}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {section.footnote && <p class="menu-footnote">{section.footnote[lang]}</p>}
+        </div>
+      ))
+    }
+  </div>
+  <MenuCards groupId={group.id} groupTitle={group.title[lang]} lang={lang} />
+</section>

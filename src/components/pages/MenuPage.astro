@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import MenuGroupView from '../MenuGroupView.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import { site } from '../../data/site';
+import heroImg from '../../assets/images/curry.jpg';
+import { menuGroups, menuLastUpdated, type Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd, menuJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const copy = {
+  fr: {
+    title: 'La carte – Midi, soir, cocktails & boissons | Appa Lanka',
+    description:
+      'La carte du restaurant Appa Lanka à Conques-sur-Orbiel : formule du midi à 18,90 €, carte du soir (bœuf confit, curry sri-lankais, biryani, hoppers), cocktails signatures, vins, bières et spiritueux.',
+    h1: 'La carte',
+    lead: 'Une cuisine maison entre tradition et Sri Lanka, des cocktails signatures et une carte de boissons soignée. Le midi, une formule courte ; le soir, la carte complète.',
+    navLabel: 'Sections de la carte',
+    heroAlt: 'Curry sri-lankais crémeux servi dans une poêle, avec brocolis et citron vert',
+  },
+  en: {
+    title: 'Menu – Lunch, evening, cocktails & drinks | Appa Lanka',
+    description:
+      'The Appa Lanka restaurant menu in Conques-sur-Orbiel: €18.90 lunch menu, evening à la carte (slow-cooked beef, Sri Lankan curry, biryani, hoppers), signature cocktails, wines, beers and spirits.',
+    h1: 'The menu',
+    lead: 'Homemade cooking between tradition and Sri Lanka, signature cocktails and a carefully chosen drinks list. A short set menu at lunch; the full menu in the evening.',
+    navLabel: 'Menu sections',
+    heroAlt: 'Creamy Sri Lankan curry served in a pan with broccoli and lime',
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.menu') },
+];
+---
+
+<Base lang={lang} routeKey="menu" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs), menuJsonLd(lang)]}>
+  <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} image={heroImg} imageAlt={copy.heroAlt} />
+  <nav class="menu-nav" aria-label={copy.navLabel}>
+    <div class="container">
+      <ul>
+        {menuGroups.map((g) => <li><a href={`#${g.id}`}>{g.title[lang]}</a></li>)}
+      </ul>
+    </div>
+  </nav>
+  <section class="section section--tight">
+    <div class="container">
+    <p class="menu-footnote">{t('menu.updated')} {menuLastUpdated[lang]}. {t('menu.prices')}</p>
+    <div class="btn-row" style="margin-top:0">
+      <a class="btn btn--outline" href={localePath(lang, 'events')}><Icon name="calendar" />{t('menu.programme')}</a>
+      <a class="btn btn--outline" href={site.loyaltyUrl} rel="noopener" target="_blank"><Icon name="gift" />{t('footer.loyalty')}</a>
+    </div>
+    {menuGroups.map((g) => <MenuGroupView group={g} lang={lang} />)}
+      <p class="legal-note">{t('footer.alcohol')}</p>
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</Base>

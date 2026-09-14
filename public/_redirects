@@ -1,0 +1,17 @@
+# Old Squarespace URLs -> new site (301, permanent)
+/menus              /carte/              301
+/manger             /carte/              301
+/trinquer           /carte/#boissons     301
+/partager           /carte/              301
+/carte-du-midi      /carte/#midi         301
+/carte-du-soir      /carte/#soir         301
+/cartesboissons     /carte/#boissons     301
+/test_alexandre     /carte/#cocktails    301
+/evenements/nouvel-an-2024      /evenements/   301
+/evenements/karaoke             /evenements/   301
+/evenements/karaoke-09-11-2023  /evenements/   301
+/evenements/dj-party            /evenements/   301
+/evenements/concert-live-show   /evenements/   301
+/cart               /                    301
+# Apex domain -> www (only used by hosts that support it here; otherwise configure at DNS/host level)
+https://appalanka.fr/*   https://www.appalanka.fr/:splat   301

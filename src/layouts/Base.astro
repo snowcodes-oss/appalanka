@@ -1,0 +1,75 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { useT } from '../i18n/ui';
+import { localePath } from '../i18n/config.js';
+import { absoluteUrl, alternates, restaurantJsonLd, websiteJsonLd, OG_LOCALE, type RouteKey } from '../i18n/seo';
+import type { Lang } from '../data/menu';
+
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey;
+  title: string;
+  description: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: object[];
+  /** Set for the 404 page so search engines don't index it. */
+  noindex?: boolean;
+}
+
+const { lang, routeKey, title, description, ogImage = '/og-image.jpg', ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const t = useT(lang);
+const canonical = absoluteUrl(localePath(lang, routeKey));
+const blocks = [restaurantJsonLd(lang), websiteJsonLd(lang), ...jsonLd];
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonical} />}
+    {!noindex && alternates(routeKey).map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta name="theme-color" content="#114237" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content={OG_LOCALE[lang]} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absoluteUrl(ogImage)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} – ${t('siteDescriptor')}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteUrl(ogImage)} />
+    <meta name="geo.region" content="FR-11" />
+    <meta name="geo.placename" content={site.address.city} />
+    <meta name="geo.position" content={`${site.geo.latitude};${site.geo.longitude}`} />
+    <meta name="ICBM" content={`${site.geo.latitude}, ${site.geo.longitude}`} />
+    <Font cssVariable="--font-amatic" preload />
+    <Font cssVariable="--font-inter" />
+    {blocks.map((b) => <script is:inline type="application/ld+json" set:html={JSON.stringify(b)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('skip')}</a>
+    <Header lang={lang} routeKey={routeKey} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

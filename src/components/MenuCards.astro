@@ -1,0 +1,61 @@
+---
+import { Picture } from 'astro:assets';
+import midiCard from '../assets/menus/carte-formule-midi.jpg';
+import soirCard from '../assets/menus/carte-du-soir.jpg';
+import cocktailsCard from '../assets/menus/carte-cocktails-signatures.jpg';
+import boissons1 from '../assets/menus/carte-boissons-1.jpg';
+import boissons2 from '../assets/menus/carte-boissons-2.jpg';
+import { useT } from '../i18n/ui';
+import type { Lang } from '../data/menu';
+
+/**
+ * Reproduces the menu cards exactly as they are published on the restaurant's
+ * channels (the original artwork). The text version above each block stays the
+ * primary content: it is what search engines index and what screen readers read,
+ * so these images are an illustration, not the only source of the information.
+ */
+interface Props {
+  groupId: string;
+  groupTitle: string;
+  lang: Lang;
+}
+
+const cardsByGroup: Record<string, ImageMetadata[]> = {
+  midi: [midiCard],
+  soir: [soirCard],
+  cocktails: [cocktailsCard],
+  boissons: [boissons1, boissons2],
+};
+
+const { groupId, groupTitle, lang } = Astro.props;
+const t = useT(lang);
+const cards = cardsByGroup[groupId] ?? [];
+const many = cards.length > 1;
+---
+
+{
+  cards.length > 0 && (
+    <div class="menu-cards">
+      <h3 class="menu-cards__title">{t('menu.cardTitle')}</h3>
+      <div class:list={['menu-cards__grid', many && 'menu-cards__grid--multi']}>
+        {cards.map((card, i) => (
+          <figure class="menu-cards__item">
+            <Picture
+              src={card}
+              formats={['avif', 'webp']}
+              widths={[420, 640, 860, 1080]}
+              sizes={many ? '(min-width: 48rem) 22rem, calc(100vw - 3.5rem)' : '(min-width: 48rem) 26rem, calc(100vw - 3.5rem)'}
+              alt={`${groupTitle} — ${t('menu.cardAlt')}${cards.length > 1 ? ` (${i + 1}/${cards.length})` : ''}`}
+              loading="lazy"
+            />
+            <figcaption>
+              <a href={card.src} target="_blank" rel="noopener">
+                {t('menu.cardOpen')} <span class="visually-hidden">{t('menu.newWindow')}</span>
+              </a>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  )
+}

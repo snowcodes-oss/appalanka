@@ -1,0 +1,46 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { useT } from '../i18n/ui';
+import type { Lang } from '../data/menu';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const title = lang === 'fr'
+  ? 'Plan schématique : Appa Lanka à Conques-sur-Orbiel, au nord-est de Carcassonne'
+  : 'Schematic map: Appa Lanka in Conques-sur-Orbiel, north-east of Carcassonne';
+---
+
+<div class="map-card">
+  <svg viewBox="0 0 640 360" role="img" aria-labelledby="map-title" xmlns="http://www.w3.org/2000/svg">
+    <title id="map-title">{title}</title>
+    <rect width="640" height="360" fill="#e4efe9" />
+    <path d="M0 250 C 120 240, 200 210, 320 200 S 560 170, 640 150" fill="none" stroke="#bcd3c9" stroke-width="10" stroke-linecap="round" />
+    <path d="M0 250 C 120 240, 200 210, 320 200 S 560 170, 640 150" fill="none" stroke="#f2ebde" stroke-width="4" stroke-dasharray="14 10" stroke-linecap="round" />
+    <path d="M190 300 C 260 250, 330 190, 430 110" fill="none" stroke="#17513f" stroke-width="7" stroke-linecap="round" />
+    <text x="260" y="220" fill="#114237" font-family="system-ui, sans-serif" font-size="15" font-weight="700" transform="rotate(-38 260 220)">D118 · 10 km</text>
+    <g>
+      <circle cx="190" cy="300" r="14" fill="#114237" />
+      <circle cx="190" cy="300" r="5" fill="#faf6ef" />
+      <text x="215" y="306" fill="#114237" font-family="system-ui, sans-serif" font-size="20" font-weight="700">{t('map.carcassonne')}</text>
+    </g>
+    <g>
+      <path d="M430 118c-24-26-24-56 0-56s24 30 0 56z" fill="#ec7018" />
+      <circle cx="430" cy="82" r="9" fill="#faf6ef" />
+      <text x="452" y="78" fill="#114237" font-family="system-ui, sans-serif" font-size="22" font-weight="700">{t('map.here')}</text>
+      <text x="452" y="100" fill="#4a4640" font-family="system-ui, sans-serif" font-size="15">Conques-sur-Orbiel</text>
+    </g>
+    <text x="520" y="330" fill="#4a4640" font-family="system-ui, sans-serif" font-size="13" text-anchor="end">Cabrespine · Limousis ↗</text>
+    <path d="M600 40 l0 -22 m0 0 l-6 8 m6 -8 l6 8" fill="none" stroke="#4a4640" stroke-width="2.5" stroke-linecap="round" />
+    <text x="600" y="58" fill="#4a4640" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">N</text>
+  </svg>
+  <p class="visually-hidden">{t('map.legend')}</p>
+  <div class="btn-row">
+    <a class="btn btn--primary" href={site.maps.google} rel="noopener" target="_blank"><Icon name="car" />{t('map.google')}</a>
+    <a class="btn btn--outline" href={site.maps.waze} rel="noopener" target="_blank">{t('map.waze')}</a>
+    <a class="btn btn--outline" href={site.maps.apple} rel="noopener" target="_blank">{t('map.apple')}</a>
+  </div>
+</div>

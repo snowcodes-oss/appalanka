@@ -1,0 +1,138 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import Hours from '../Hours.astro';
+import MapCard from '../MapCard.astro';
+import roomImg from '../../assets/images/salle-bar-portrait.jpg';
+import heroImg from '../../assets/images/salle-bar.jpg';
+import { site } from '../../data/site';
+import type { Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const copy = {
+  fr: {
+    title: 'Restaurant près de Carcassonne, à 10 min de la Cité | Appa Lanka',
+    description:
+      'Vous cherchez un restaurant près de Carcassonne ? Appa Lanka vous attend à Conques-sur-Orbiel, à 10 km de la Cité : cuisine sri-lankaise et traditionnelle, cocktails signatures, parking gratuit.',
+    h1: 'Un restaurant à 10 minutes de Carcassonne',
+    lead: 'Envie de sortir de la Cité et de la Bastide pour dîner ? Appa Lanka se trouve à Conques-sur-Orbiel, à un quart d’heure de route au nord-est de Carcassonne, dans un village calme du Cabardès.',
+    whyTitle: 'Pourquoi venir jusqu’à Conques-sur-Orbiel ?',
+    why: [
+      { icon: 'leaf', title: 'Une cuisine que l’on ne trouve nulle part ailleurs', text: 'Des spécialités sri-lankaises cuisinées par un chef originaire de l’île, et des plats traditionnels revisités : bœuf confit 30 h, bao XL, gyozas maison.' },
+      { icon: 'cocktail', title: 'Un vrai bar à cocktails', text: 'Des créations signatures, clarifiées ou sans alcool, une carte de gins et de rhums, des vins de l’Aude et du Languedoc.' },
+      { icon: 'music', title: 'Des soirées animées', text: 'Concerts live, karaoké, blind tests, DJ, retransmission des matchs : consultez le programme avant de venir.' },
+      { icon: 'parking', title: 'Facile d’accès, stationnement gratuit', text: 'Pas de zone piétonne ni de parking payant : on se gare gratuitement à deux pas du restaurant, terrasse aux beaux jours.' },
+    ],
+    routeTitle: 'Comment venir depuis Carcassonne',
+    route: [
+      { icon: 'car', text: 'En voiture : depuis Carcassonne, prenez la direction Mazamet / Montagne Noire (D118) puis suivez Conques-sur-Orbiel. Comptez environ 15 minutes depuis la Bastide et 20 minutes depuis la Cité médiévale.' },
+      { icon: 'pin', text: `Le restaurant est au ${site.address.street}, ${site.address.postalCode} ${site.address.city}. Entrez « Appa Lanka » dans votre GPS ou utilisez les boutons d’itinéraire ci-dessous.` },
+      { icon: 'clock', text: 'Le soir, il n’y a pas de transport en commun entre Carcassonne et Conques-sur-Orbiel : prévoyez une voiture, un taxi ou un VTC. Pensez à réserver, surtout le week-end.' },
+    ],
+    aroundTitle: 'Sur la route des grottes et de la Montagne Noire',
+    aroundText: 'Conques-sur-Orbiel est l’étape idéale sur la route du gouffre géant de Cabrespine et de la grotte de Limousis, à une quinzaine de minutes au nord. Le Canal du Midi (à Trèbes) et la Cité de Carcassonne sont à 10 km. Une journée de visites, une soirée chez Appa Lanka.',
+    aroundAlt: 'La salle d’Appa Lanka avec son bar en briques, ses lampes en rotin et ses plantes suspendues',
+    hoursTitle: 'Horaires',
+    mapTitle: 'Itinéraire',
+    heroAlt: 'La salle d’Appa Lanka et son bar en briques éclairé, à Conques-sur-Orbiel',
+  },
+  en: {
+    title: 'Restaurant near Carcassonne, 10 min from La Cité | Appa Lanka',
+    description:
+      'Looking for a restaurant near Carcassonne? Appa Lanka awaits you in Conques-sur-Orbiel, 10 km from La Cité: Sri Lankan and traditional cooking, signature cocktails, free parking.',
+    h1: 'A restaurant 10 minutes from Carcassonne',
+    lead: 'Fancy leaving La Cité and the Bastide for dinner? Appa Lanka is in Conques-sur-Orbiel, a quarter of an hour’s drive north-east of Carcassonne, in a quiet village of the Cabardès.',
+    whyTitle: 'Why come all the way to Conques-sur-Orbiel?',
+    why: [
+      { icon: 'leaf', title: 'Food you won’t find anywhere else', text: 'Sri Lankan specialities cooked by a chef born on the island, and revisited traditional dishes: 30-hour slow-cooked beef, XL bao, homemade gyozas.' },
+      { icon: 'cocktail', title: 'A real cocktail bar', text: 'Signature creations, clarified or alcohol-free, a list of gins and rums, wines from the Aude and Languedoc.' },
+      { icon: 'music', title: 'Lively nights', text: 'Live concerts, karaoke, blind tests, DJ sets, live sports: check the programme before you come.' },
+      { icon: 'parking', title: 'Easy access, free parking', text: 'No pedestrian zone and no paid car park: park for free a few steps from the restaurant, terrace in fine weather.' },
+    ],
+    routeTitle: 'How to get here from Carcassonne',
+    route: [
+      { icon: 'car', text: 'By car: from Carcassonne, head for Mazamet / Montagne Noire (D118) then follow signs to Conques-sur-Orbiel. Allow about 15 minutes from the Bastide and 20 minutes from the medieval Cité.' },
+      { icon: 'pin', text: `The restaurant is at ${site.address.street}, ${site.address.postalCode} ${site.address.city}. Type “Appa Lanka” into your sat-nav or use the directions buttons below.` },
+      { icon: 'clock', text: 'In the evening there is no public transport between Carcassonne and Conques-sur-Orbiel: plan on a car, a taxi or a ride-hailing service. Remember to book, especially at weekends.' },
+    ],
+    aroundTitle: 'On the road to the caves and the Montagne Noire',
+    aroundText: 'Conques-sur-Orbiel is the ideal stop on the way to the giant Cabrespine chasm and the Limousis cave, about fifteen minutes to the north. The Canal du Midi (at Trèbes) and the Cité de Carcassonne are 10 km away. A day of sightseeing, an evening at Appa Lanka.',
+    aroundAlt: 'The Appa Lanka dining room with its brick bar, rattan lamps and hanging plants',
+    hoursTitle: 'Opening hours',
+    mapTitle: 'Directions',
+    heroAlt: 'The Appa Lanka dining room and its lit brick bar in Conques-sur-Orbiel',
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.carcassonne') },
+];
+---
+
+<Base lang={lang} routeKey="carcassonne" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} image={heroImg} imageAlt={copy.heroAlt} />
+
+  <section class="section" aria-labelledby="why-title">
+    <div class="container">
+      <h2 id="why-title">{copy.whyTitle}</h2>
+      <div class="grid grid--2">
+        {
+          copy.why.map((w) => (
+            <article class="event-card">
+              <Icon name={w.icon as any} />
+              <div>
+                <h3>{w.title}</h3>
+                <p>{w.text}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="route-title">
+    <div class="container grid grid--2">
+      <div>
+        <h2 id="route-title">{copy.routeTitle}</h2>
+        <ul class="info-list">
+          {copy.route.map((r) => <li><Icon name={r.icon as any} /><span>{r.text}</span></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2 class="visually-hidden">{copy.mapTitle}</h2>
+        <MapCard lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="around-title">
+    <div class="container media-split media-split--reverse">
+      <div class="prose">
+        <h2 id="around-title">{copy.aroundTitle}</h2>
+        <p>{copy.aroundText}</p>
+        <h3>{copy.hoursTitle}</h3>
+        <Hours lang={lang} hideCaption />
+        <div class="btn-row">
+          <a class="btn btn--primary" href={`tel:${site.phone.tel}`}><Icon name="phone" />{t('cta.book')}</a>
+          <a class="btn btn--outline" href={localePath(lang, 'menu')}>{t('cta.menu')}</a>
+        </div>
+      </div>
+      <Picture src={roomImg} formats={['avif', 'webp']} width={720} height={900} sizes="(min-width: 56rem) 34rem, calc(100vw - 2rem)" alt={copy.aroundAlt} loading="lazy" style="aspect-ratio:4/5" />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

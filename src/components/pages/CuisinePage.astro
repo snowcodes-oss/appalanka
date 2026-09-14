@@ -1,0 +1,161 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import curryImg from '../../assets/images/curry.jpg';
+import heroImg from '../../assets/images/bowl-power-lanka.jpg';
+import bowlImg from '../../assets/images/bowl-power-lanka.jpg';
+import { dinner, cocktails, formatPrice, type Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const sriLankanDishes = dinner.sections.flatMap((s) => s.items).filter((i) => i.tags?.includes('sl'));
+const sriLankanDrinks = cocktails.sections[0].items.filter((i) => i.tags?.includes('sl'));
+
+const copy = {
+  fr: {
+    title: 'Restaurant sri-lankais près de Carcassonne | Appa Lanka',
+    description:
+      'Curry aux épices douces, biryani, hoppers (appa), kulfi, lassi… Découvrez la cuisine sri-lankaise du chef d’Appa Lanka, restaurant à Conques-sur-Orbiel, à 10 minutes de Carcassonne.',
+    h1: 'La cuisine sri-lankaise, à 10 minutes de Carcassonne',
+    lead: 'Un restaurant sri-lankais dans l’Aude ? Oui : chez Appa Lanka, le chef, originaire du Sri Lanka, cuisine les recettes de sa mère avec les produits d’ici.',
+    s1Eyebrow: 'L’île des épices',
+    s1Title: 'Le Sri Lanka dans l’assiette',
+    s1P1: 'La cuisine sri-lankaise est une cuisine d’île : riz, noix de coco, poisson, légumes et une palette d’épices parmi les plus parfumées au monde. La cannelle de Ceylan, la cardamome, les feuilles de curry, le pandan et le poivre noir y sont cultivés depuis des siècles.',
+    s1P2: 'Le plat national, le « rice and curry », réunit un riz et plusieurs currys de viande, de poisson ou de légumes, servis avec des sambols (condiments à la noix de coco). On y trouve aussi le kottu, des roti hachés et sautés au wok, et les hoppers, ces fines crêpes de riz fermenté cuites en forme de bol : en singhalais, on les appelle « appa ». C’est de là que vient notre nom.',
+    s1Alt: 'Curry sri-lankais crémeux aux légumes, servi dans une poêle en fonte',
+    s2Eyebrow: 'À la carte',
+    s2Title: 'Nos spécialités sri-lankaises',
+    s2Intro: 'Elles sont signalées par un petit drapeau 🇱🇰 sur la carte du soir. En ce moment :',
+    s2Cta: 'Voir toute la carte',
+    s3Eyebrow: 'Doux ou relevé ?',
+    s3Title: 'Des épices parfumées, pas brûlantes',
+    s3P1: 'Au Sri Lanka, on cuisine volontiers très pimenté. Ici, les currys sont préparés avec des épices torréfiées et parfumées mais douces, pour convenir à toute la table, enfants compris. Vous aimez quand ça pique ? Il suffit de le dire en commandant.',
+    s3P2: 'Nos plats sri-lankais côtoient une cuisine traditionnelle revisitée : bœuf confit 30 heures, burger bao XL, gyozas… De quoi contenter tout le monde, y compris ceux qui hésitent encore à voyager.',
+    s3Alt: 'Bowl Power Lanka au saumon mariné, edamame, mangue et chou rouge',
+    s4Eyebrow: 'Côté bar',
+    s4Title: 'Ceylan se boit aussi',
+    s4Intro: 'L’esprit de l’île se retrouve jusque dans les verres : un gin Colombo distillé au Sri Lanka, un thé noir de Ceylan et des cocktails signatures aux épices.',
+    s4Cta: 'Voir les cocktails signatures',
+    heroAlt: 'Bowl Power Lanka au saumon mariné, edamame, mangue et chou rouge',
+  },
+  en: {
+    title: 'Sri Lankan restaurant near Carcassonne | Appa Lanka',
+    description:
+      'Mild-spiced curry, biryani, hoppers (appa), kulfi, lassi… Discover the Sri Lankan cooking of the chef at Appa Lanka, a restaurant in Conques-sur-Orbiel, 10 minutes from Carcassonne.',
+    h1: 'Sri Lankan cuisine, 10 minutes from Carcassonne',
+    lead: 'A Sri Lankan restaurant in the Aude? Yes: at Appa Lanka the chef, born in Sri Lanka, cooks his mother’s recipes with local produce.',
+    s1Eyebrow: 'The spice island',
+    s1Title: 'Sri Lanka on the plate',
+    s1P1: 'Sri Lankan food is island food: rice, coconut, fish, vegetables and one of the most fragrant spice palettes in the world. Ceylon cinnamon, cardamom, curry leaves, pandan and black pepper have been grown there for centuries.',
+    s1P2: 'The national dish, “rice and curry”, brings together rice and several meat, fish or vegetable curries served with sambols (coconut condiments). There is also kottu, chopped roti stir-fried in a wok, and hoppers, thin fermented-rice pancakes cooked in the shape of a bowl: in Sinhala they are called “appa”. That is where our name comes from.',
+    s1Alt: 'Creamy Sri Lankan vegetable curry served in a cast-iron pan',
+    s2Eyebrow: 'On the menu',
+    s2Title: 'Our Sri Lankan specialities',
+    s2Intro: 'They are marked with a small 🇱🇰 flag on the evening menu. Currently:',
+    s2Cta: 'See the full menu',
+    s3Eyebrow: 'Mild or hot?',
+    s3Title: 'Fragrant spices, not fiery ones',
+    s3P1: 'In Sri Lanka, food is often very hot. Here, curries are made with roasted, fragrant but mild spices to suit the whole table, children included. Like it hot? Just say so when ordering.',
+    s3P2: 'Our Sri Lankan dishes sit alongside revisited traditional cooking: 30-hour slow-cooked beef, XL bao burger, gyozas… Something for everyone, including those not quite ready to travel yet.',
+    s3Alt: 'Power Lanka bowl with marinated salmon, edamame, mango and red cabbage',
+    s4Eyebrow: 'At the bar',
+    s4Title: 'Ceylon in a glass',
+    s4Intro: 'The island spirit reaches the glasses too: a Colombo gin distilled in Sri Lanka, a Ceylon black tea and spiced signature cocktails.',
+    s4Cta: 'See the signature cocktails',
+    heroAlt: 'Power Lanka bowl with marinated salmon, edamame, mango and red cabbage',
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.cuisine') },
+];
+---
+
+<Base lang={lang} routeKey="cuisine" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} image={heroImg} imageAlt={copy.heroAlt} />
+
+  <section class="section" aria-labelledby="s1">
+    <div class="container media-split">
+      <div class="prose">
+        <p class="eyebrow">{copy.s1Eyebrow}</p>
+        <h2 id="s1">{copy.s1Title}</h2>
+        <p>{copy.s1P1}</p>
+        <p>{copy.s1P2}</p>
+      </div>
+      <Picture src={curryImg} formats={['avif', 'webp']} width={800} height={600} sizes="(min-width: 56rem) 34rem, calc(100vw - 2rem)" alt={copy.s1Alt} priority />
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="s2">
+    <div class="container">
+      <p class="eyebrow">{copy.s2Eyebrow}</p>
+      <h2 id="s2">{copy.s2Title}</h2>
+      <p class="lead">{copy.s2Intro}</p>
+      <ul class="menu-list notice" style="max-width:48rem">
+        {
+          sriLankanDishes.map((item) => (
+            <li class="dish">
+              <div>
+                <span class="dish__name">{item.name[lang]}</span>
+                {item.desc && <p class="dish__desc">{item.desc[lang]}</p>}
+              </div>
+              {item.price !== undefined && <span class="dish__price">{formatPrice(item.price, lang)}</span>}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={localePath(lang, 'menu') + '#soir'}>{copy.s2Cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="s3">
+    <div class="container media-split media-split--reverse">
+      <div class="prose">
+        <p class="eyebrow">{copy.s3Eyebrow}</p>
+        <h2 id="s3">{copy.s3Title}</h2>
+        <p>{copy.s3P1}</p>
+        <p>{copy.s3P2}</p>
+      </div>
+      <Picture src={bowlImg} formats={['avif', 'webp']} width={800} height={600} sizes="(min-width: 56rem) 34rem, calc(100vw - 2rem)" alt={copy.s3Alt} loading="lazy" />
+    </div>
+  </section>
+
+  <section class="section section--green" aria-labelledby="s4">
+    <div class="container">
+      <p class="eyebrow">{copy.s4Eyebrow}</p>
+      <h2 id="s4">{copy.s4Title}</h2>
+      <p class="lead">{copy.s4Intro}</p>
+      <ul class="menu-list" style="max-width:48rem">
+        {
+          sriLankanDrinks.map((item) => (
+            <li class="dish" style="border-color:rgb(255 255 255 / .2)">
+              <div>
+                <span class="dish__name">{item.name[lang]}</span>
+                {item.desc && <p class="dish__desc" style="color:var(--green-100)">{item.desc[lang]}</p>}
+              </div>
+              {item.price !== undefined && <span class="dish__price" style="color:var(--gold-300)">{formatPrice(item.price, lang)}</span>}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--outline" href={localePath(lang, 'menu') + '#cocktails'}>{copy.s4Cta}</a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

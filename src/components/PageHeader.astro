@@ -1,0 +1,61 @@
+---
+import { Picture } from 'astro:assets';
+import { useT } from '../i18n/ui';
+import type { Crumb } from '../i18n/seo';
+import type { Lang } from '../data/menu';
+
+/**
+ * Bannière de page reprise du site en ligne : photo plein cadre (ou aplat
+ * vert), titre en Amatic SC centré, trait vert sous le titre.
+ */
+interface Props {
+  lang: Lang;
+  title: string;
+  lead?: string;
+  crumbs: Crumb[];
+  /** Photo de fond. Sans image, la bannière reste sur l'aplat vert. */
+  image?: ImageMetadata;
+  imageAlt?: string;
+  short?: boolean;
+}
+const { lang, title, lead, crumbs, image, imageAlt = '', short = false } = Astro.props;
+const t = useT(lang);
+---
+
+<div class:list={['hero', short && 'hero--short']}>
+  {
+    image && (
+      <div class="hero__bg">
+        <Picture
+          src={image}
+          formats={['avif', 'webp']}
+          widths={[420, 640, 828, 1024, 1200, 1440, 1800]}
+          width={1800}
+          height={1013}
+          sizes="100vw"
+          quality={34}
+          alt={imageAlt}
+          priority
+        />
+      </div>
+    )
+  }
+  <div class="container center">
+    <nav class="breadcrumb" aria-label={t('breadcrumb.label')}>
+      <ol>
+        {
+          crumbs.map((c, i) =>
+            i === crumbs.length - 1 ? (
+              <li aria-current="page">{c.label}</li>
+            ) : (
+              <li><a href={c.href}>{c.label}</a></li>
+            ),
+          )
+        }
+      </ol>
+    </nav>
+    <h1>{title}</h1>
+    <p class="hero__rule" aria-hidden="true"></p>
+    {lead && <p class="lead">{lead}</p>}
+  </div>
+</div>

@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { useT } from '../i18n/ui';
+import { localePath } from '../i18n/config.js';
+
+const t = useT('fr');
+---
+
+<Base lang="fr" routeKey="home" title="Page introuvable | Appa Lanka" description={t('notfound.text')} noindex>
+  <section class="section">
+    <div class="container center">
+      <p class="eyebrow">404</p>
+      <h1>{t('notfound.title')}</h1>
+      <p class="lead">{t('notfound.text')}</p>
+      <p lang="en">This page does not exist. <a href={localePath('en', 'home')}>Back to the English home page</a>.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--primary" href={localePath('fr', 'home')}>{t('notfound.cta')}</a>
+        <a class="btn btn--outline" href={localePath('fr', 'menu')}>{t('cta.menu')}</a>
+      </div>
+    </div>
+  </section>
+</Base>

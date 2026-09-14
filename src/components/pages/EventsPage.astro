@@ -1,0 +1,160 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import CtaBand from '../CtaBand.astro';
+import Icon from '../Icon.astro';
+import { recurringEvents, upcomingEvents, pastEvents } from '../../data/events';
+import { site } from '../../data/site';
+import type { Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd, absoluteUrl } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const copy = {
+  fr: {
+    title: 'Événements : concerts, karaoké, soirées | Appa Lanka',
+    description:
+      'Concerts live, soirées karaoké, blind tests, DJ et diffusion de matchs chez Appa Lanka, restaurant et bar à cocktails à Conques-sur-Orbiel près de Carcassonne. Privatisation possible.',
+    h1: 'Événements & soirées',
+    lead: 'Chaque mois, Appa Lanka programme concerts, karaoké, blind tests et soirées DJ. Le bar diffuse aussi les grands matchs. Réservez votre table : les soirs d’événement affichent vite complet.',
+    upcomingTitle: 'Prochains événements',
+    none: 'Le programme des prochaines semaines est annoncé sur nos réseaux. Suivez-nous pour ne rien manquer, ou appelez-nous.',
+    follow: 'Suivre sur Instagram',
+    followFb: 'Suivre sur Facebook',
+    formatsTitle: 'Ce que l’on organise',
+    privateTitle: 'Privatiser Appa Lanka',
+    privateText: 'Anniversaire, repas d’entreprise, séminaire, soirée entre amis : la salle et le bar peuvent être privatisés, avec un menu et des cocktails adaptés à votre événement. Parlez-nous de votre projet, nous construisons la soirée avec vous.',
+    privateCta: 'Nous contacter',
+    pastTitle: 'Ils ont fait vibrer la salle',
+    pastIntro: 'Quelques soirées marquantes depuis l’ouverture :',
+    dateLocale: 'fr-FR',
+  },
+  en: {
+    title: 'Events: concerts, karaoke, nights out | Appa Lanka',
+    description:
+      'Live concerts, karaoke nights, blind tests, DJ sets and live sports at Appa Lanka, restaurant and cocktail bar in Conques-sur-Orbiel near Carcassonne. Private hire available.',
+    h1: 'Events & nights out',
+    lead: 'Every month Appa Lanka programmes concerts, karaoke, blind tests and DJ nights. The bar also shows the big games. Book your table: event nights fill up fast.',
+    upcomingTitle: 'Upcoming events',
+    none: 'The programme for the coming weeks is announced on our social media. Follow us so you don’t miss anything, or give us a call.',
+    follow: 'Follow on Instagram',
+    followFb: 'Follow on Facebook',
+    formatsTitle: 'What we organise',
+    privateTitle: 'Hire Appa Lanka',
+    privateText: 'Birthday, company meal, seminar, night out with friends: the room and the bar can be hired privately, with a menu and cocktails tailored to your event. Tell us about your project and we will build the evening with you.',
+    privateCta: 'Contact us',
+    pastTitle: 'They rocked the room',
+    pastIntro: 'A few memorable nights since we opened:',
+    dateLocale: 'en-GB',
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.events') },
+];
+
+const eventJsonLd = upcomingEvents.map((e) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: e.title[lang],
+  description: e.description[lang],
+  startDate: e.start,
+  ...(e.end ? { endDate: e.end } : {}),
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  url: `${absoluteUrl(localePath(lang, 'events'))}#${e.slug}`,
+  location: { '@id': `${site.url}/#restaurant` },
+  organizer: { '@id': `${site.url}/#restaurant` },
+  ...(e.price !== undefined
+    ? { offers: { '@type': 'Offer', price: e.price.toFixed(2), priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url: absoluteUrl(localePath(lang, 'contact')) } }
+    : {}),
+}));
+
+const fmt = new Intl.DateTimeFormat(copy.dateLocale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
+---
+
+<Base lang={lang} routeKey="events" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs), ...eventJsonLd]}>
+  <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} />
+
+  <section class="section" aria-labelledby="upcoming-title">
+    <div class="container">
+      <h2 id="upcoming-title">{copy.upcomingTitle}</h2>
+      {
+        upcomingEvents.length > 0 ? (
+          <ul class="menu-list">
+            {upcomingEvents.map((e) => (
+              <li class="upcoming" id={e.slug}>
+                <time datetime={e.start}>{fmt.format(new Date(e.start))}</time>
+                <h3>{e.title[lang]}</h3>
+                <p>{e.description[lang]}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="notice" style="max-width:48rem">
+            <p>{copy.none}</p>
+            <div class="btn-row">
+              <a class="btn btn--primary" href={site.social.instagram} rel="noopener" target="_blank"><Icon name="instagram" />{copy.follow}</a>
+              <a class="btn btn--outline" href={site.social.facebook} rel="noopener" target="_blank"><Icon name="facebook" />{copy.followFb}</a>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="formats-title">
+    <div class="container">
+      <h2 id="formats-title">{copy.formatsTitle}</h2>
+      <div class="grid grid--2">
+        {
+          recurringEvents.map((e) => (
+            <article class="event-card">
+              <Icon name={e.icon} />
+              <div>
+                <h3>{e.title[lang]}</h3>
+                <p>{e.text[lang]}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--green" aria-labelledby="private-title">
+    <div class="container media-split">
+      <div>
+        <h2 id="private-title">{copy.privateTitle}</h2>
+        <p class="lead">{copy.privateText}</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href={localePath(lang, 'contact')}>{copy.privateCta}</a>
+          <a class="btn btn--outline" href={`mailto:${site.email}`}><Icon name="mail" />{site.email}</a>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--gold-300)">{copy.pastTitle}</h3>
+        <p>{copy.pastIntro}</p>
+        <ul class="check-list">
+          {
+            pastEvents.map((e) => (
+              <li>
+                <Icon name="star" />
+                <span><strong>{e.title[lang]}</strong> – {e.text[lang]}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

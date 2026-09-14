@@ -1,0 +1,273 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Hours from '../Hours.astro';
+import MapCard from '../MapCard.astro';
+import Faq from '../Faq.astro';
+import CtaBand from '../CtaBand.astro';
+import heroImg from '../../assets/images/salle-bar.jpg';
+import curryImg from '../../assets/images/curry.jpg';
+import cocktailsImg from '../../assets/images/cocktails.jpg';
+import partagerImg from '../../assets/images/partager.jpg';
+import bowlImg from '../../assets/images/bowl-power-lanka.jpg';
+import { site } from '../../data/site';
+import { highlights, formatPrice, type Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { faqJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const phone = site.phone.display;
+
+const copy = {
+  fr: {
+    title: 'Appa Lanka | Restaurant à Conques-sur-Orbiel près de Carcassonne',
+    description:
+      'Appa Lanka, restaurant et bar à cocktails à Conques-sur-Orbiel, à 10 min de Carcassonne : cuisine traditionnelle revisitée, spécialités sri-lankaises, cocktails signatures, concerts et karaoké.',
+    h1: 'Restaurant & bar à cocktails à Conques-sur-Orbiel',
+    words: [
+      { label: 'Manger', key: 'menu' as const, hash: '#soir' },
+      { label: 'Trinquer', key: 'menu' as const, hash: '#cocktails' },
+      { label: 'Partager', key: 'events' as const, hash: '' },
+    ],
+    lead: 'À 10 minutes de Carcassonne, Ophélie et Christopher vous accueillent dans une salle cosy : plats traditionnels revisités, spécialités sri-lankaises du chef et cocktails signatures, dans une ambiance chaleureuse.',
+    heroAlt: 'La salle du restaurant Appa Lanka : tables en bois, fauteuils en velours et bar éclairé sous des plantes suspendues',
+    metaHours: 'Mer.–sam. soir · Mer.–ven. midi',
+    pillarsTitle: 'Manger, trinquer, partager',
+    pillars: [
+      { title: 'Manger', text: 'Formule du midi à 18,90 €, carte du soir entre bœuf confit 30 h, curry sri-lankais et bao XL. Des plats faits maison, à déguster seul ou à partager.', alt: 'Curry sri-lankais servi dans une poêle avec brocolis et citron vert', img: curryImg, key: 'menu' as const, cta: 'Voir la carte' },
+      { title: 'Trinquer', text: 'Des cocktails signatures créés pour Appa Lanka, dont plusieurs en version sans alcool, une belle sélection de gins et de rhums, et des vins de la région.', alt: 'Trois cocktails colorés que l’on trinque au bar', img: cocktailsImg, key: 'menu' as const, cta: 'Voir les cocktails', hash: '#cocktails' },
+      { title: 'Partager', text: 'Entrées et plats se dégustent seuls ou à plusieurs. Concerts, karaoké, blind tests : chaque mois, un bon prétexte pour se retrouver.', alt: 'Planche de fromages et charcuteries partagée autour de verres de vin', img: partagerImg, key: 'events' as const, cta: 'Voir les événements' },
+    ],
+    aboutEyebrow: 'Le restaurant',
+    aboutTitle: 'Un voyage entre Occitanie et Sri Lanka',
+    aboutP1: 'Appa Lanka est né de l’envie d’Ophélie et Christopher de réunir deux cultures dans une même assiette. Le midi, une cuisine traditionnelle et généreuse ; le soir, la carte s’ouvre aux saveurs de l’île : curry de poulet aux épices douces, biryani de saumon, hoppers du chef, kulfi à la cardamome.',
+    aboutP2: '« Appa », c’est le nom des hoppers, ces fines crêpes de riz en forme de bol, emblématiques du Sri Lanka. Un clin d’œil aux origines du chef et à la cuisine de sa mère, préparée ici, à Conques-sur-Orbiel.',
+    aboutList: ['Cuisine maison, produits frais et de saison', 'Épices sri-lankaises parfumées mais douces (sauf si vous demandez le contraire !)', 'Options végétariennes et menu enfant à 12 €', 'Terrasse, accès PMR, parking gratuit, animaux acceptés'],
+    aboutAlt: 'Bowl Power Lanka : saumon, edamame, mangue, chou rouge et sésame',
+    aboutCta: 'Découvrir la cuisine sri-lankaise',
+    menuEyebrow: 'La carte',
+    menuTitle: 'Quelques incontournables',
+    menuNote: 'Formule du midi 18,90 € (plat + dessert) · Menu kid 12 €',
+    menuCta: 'Voir toute la carte',
+    eventsEyebrow: 'Événements',
+    eventsTitle: 'Concerts, karaoké, blind tests…',
+    eventsText: 'Chaque mois, Appa Lanka fait la fête : concerts live, soirées karaoké, blind tests, soirées DJ et diffusion des grands matchs. La salle peut aussi être privatisée pour vos événements privés ou professionnels.',
+    eventsCta: 'Voir les événements',
+    eventsInsta: 'Suivre l’agenda sur Instagram',
+    infoTitle: 'Infos pratiques',
+    faqTitle: 'Questions fréquentes',
+    faq: [
+      { q: 'Où se trouve le restaurant Appa Lanka ?', a: 'Au 2 rue Jean Ferrat à Conques-sur-Orbiel (11600), dans l’Aude, à environ 10 km au nord-est de Carcassonne. Comptez 15 minutes en voiture depuis la Cité ou la Bastide. Parking gratuit à proximité.' },
+      { q: 'Quels sont les horaires d’ouverture ?', a: 'Le restaurant est ouvert du mercredi au samedi soir et du mercredi au vendredi midi. Le mardi soir et le samedi midi, nous ouvrons sur réservation. Fermé le dimanche et le lundi.' },
+      { q: 'Faut-il réserver ?', a: `La réservation est conseillée, surtout le week-end et les soirs d’événement. Appelez le ${phone}. Le mardi soir et le samedi midi, nous ouvrons uniquement sur réservation.` },
+      { q: 'La cuisine sri-lankaise est-elle très épicée ?', a: 'Non : nos currys sont préparés avec des épices parfumées mais douces, pour plaire à tous. Si vous aimez quand ça pique, dites-le nous !' },
+      { q: 'Proposez-vous des plats végétariens ou un menu enfant ?', a: 'Oui : gyozas végétariens, frites de patate douce, desserts… et un menu kid à 12 € le midi comme le soir. Signalez-nous vos allergies, l’équipe vous conseillera.' },
+      { q: 'Peut-on privatiser le restaurant ?', a: 'Oui, pour un anniversaire, un repas d’entreprise, un séminaire ou une soirée entre amis. Contactez-nous par téléphone ou e-mail pour organiser votre événement.' },
+      { q: 'Y a-t-il des cocktails sans alcool ?', a: 'Oui, plusieurs cocktails signatures existent en version sans alcool à 8 €, ainsi que des softs, des jus de fruits et des thés, dont un thé noir de Ceylan.' },
+    ],
+  },
+  en: {
+    title: 'Appa Lanka | Restaurant in Conques-sur-Orbiel near Carcassonne',
+    description:
+      'Appa Lanka, restaurant and cocktail bar in Conques-sur-Orbiel, 10 minutes from Carcassonne: revisited traditional cooking, Sri Lankan specialities, signature cocktails, live music and karaoke.',
+    h1: 'Restaurant & cocktail bar in Conques-sur-Orbiel',
+    words: [
+      { label: 'Eat', key: 'menu' as const, hash: '#soir' },
+      { label: 'Drink', key: 'menu' as const, hash: '#cocktails' },
+      { label: 'Share', key: 'events' as const, hash: '' },
+    ],
+    lead: 'Ten minutes from Carcassonne, Ophélie and Christopher welcome you to a cosy dining room: revisited traditional dishes, the chef’s Sri Lankan specialities and signature cocktails, in a warm atmosphere.',
+    heroAlt: 'The Appa Lanka dining room: wooden tables, velvet armchairs and a lit bar beneath hanging plants',
+    metaHours: 'Wed–Sat evenings · Wed–Fri lunch',
+    pillarsTitle: 'Eat, drink, share',
+    pillars: [
+      { title: 'Eat', text: 'Lunch menu at €18.90, evening à la carte from 30-hour slow-cooked beef to Sri Lankan curry and XL bao. Homemade dishes to enjoy alone or to share.', alt: 'Sri Lankan curry served in a pan with broccoli and lime', img: curryImg, key: 'menu' as const, cta: 'See the menu' },
+      { title: 'Drink', text: 'Signature cocktails created for Appa Lanka, several of them alcohol-free, a fine selection of gins and rums, and wines from the region.', alt: 'Three colourful cocktails clinked together at the bar', img: cocktailsImg, key: 'menu' as const, cta: 'See the cocktails', hash: '#cocktails' },
+      { title: 'Share', text: 'Starters and mains can be enjoyed alone or together. Concerts, karaoke, blind tests: every month, a good excuse to get together.', alt: 'A cheese and charcuterie board shared over glasses of wine', img: partagerImg, key: 'events' as const, cta: 'See the events' },
+    ],
+    aboutEyebrow: 'The restaurant',
+    aboutTitle: 'A journey between Occitania and Sri Lanka',
+    aboutP1: 'Appa Lanka was born from Ophélie and Christopher’s wish to bring two cultures together on one plate. At lunchtime, generous traditional cooking; in the evening, the menu opens up to the island’s flavours: chicken curry with mild spices, salmon biryani, the chef’s hoppers, cardamom kulfi.',
+    aboutP2: '“Appa” is the name of hoppers, the thin bowl-shaped rice pancakes emblematic of Sri Lanka. A nod to the chef’s roots and to his mother’s cooking, prepared here in Conques-sur-Orbiel.',
+    aboutList: ['Homemade cooking, fresh seasonal produce', 'Fragrant but mild Sri Lankan spices (unless you ask for heat!)', 'Vegetarian options and a €12 kids menu', 'Terrace, wheelchair access, free parking, pets welcome'],
+    aboutAlt: 'Power Lanka bowl: salmon, edamame, mango, red cabbage and sesame',
+    aboutCta: 'Discover Sri Lankan cuisine',
+    menuEyebrow: 'The menu',
+    menuTitle: 'A few must-tries',
+    menuNote: 'Lunch menu €18.90 (main + dessert) · Kids menu €12',
+    menuCta: 'See the full menu',
+    eventsEyebrow: 'Events',
+    eventsTitle: 'Concerts, karaoke, blind tests…',
+    eventsText: 'Every month Appa Lanka throws a party: live concerts, karaoke nights, blind tests, DJ nights and the big games on screen. The room can also be hired for private or corporate events.',
+    eventsCta: 'See the events',
+    eventsInsta: 'Follow the programme on Instagram',
+    infoTitle: 'Practical information',
+    faqTitle: 'Frequently asked questions',
+    faq: [
+      { q: 'Where is the Appa Lanka restaurant?', a: 'At 2 rue Jean Ferrat in Conques-sur-Orbiel (11600), in the Aude, about 10 km north-east of Carcassonne. Allow 15 minutes by car from La Cité or the Bastide. Free parking nearby.' },
+      { q: 'What are the opening hours?', a: 'The restaurant is open Wednesday to Saturday evenings and Wednesday to Friday lunchtimes. Tuesday evening and Saturday lunch are by reservation. Closed on Sunday and Monday.' },
+      { q: 'Do I need to book?', a: `Booking is recommended, especially at weekends and on event nights. Call ${site.phone.intl}. On Tuesday evenings and Saturday lunchtimes we open by reservation only.` },
+      { q: 'Is Sri Lankan food very spicy?', a: 'No: our curries are made with fragrant but mild spices to suit everyone. If you like it hot, just let us know!' },
+      { q: 'Do you offer vegetarian dishes or a kids menu?', a: 'Yes: vegetarian gyozas, sweet potato fries, desserts… and a €12 kids menu at lunch and dinner. Tell us about any allergies and the team will advise you.' },
+      { q: 'Can the restaurant be hired privately?', a: 'Yes, for a birthday, a company meal, a seminar or a night out with friends. Contact us by phone or e-mail to organise your event.' },
+      { q: 'Are there alcohol-free cocktails?', a: 'Yes, several signature cocktails come in an alcohol-free version at €8, along with soft drinks, fruit juices and teas, including a Ceylon black tea.' },
+    ],
+  },
+}[lang];
+---
+
+<Base lang={lang} routeKey="home" title={copy.title} description={copy.description} jsonLd={[faqJsonLd(copy.faq)]}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__bg">
+      <Picture
+        src={heroImg}
+        formats={['avif', 'webp']}
+        widths={[420, 640, 828, 1024, 1200, 1440, 1800]}
+        width={1800}
+        height={1013}
+        sizes="100vw"
+        quality={34}
+        alt={copy.heroAlt}
+        priority
+      />
+    </div>
+    <div class="container center">
+      <h1 id="hero-title">{copy.h1}</h1>
+      <p class="hero__rule" aria-hidden="true"></p>
+      <ul class="hero__words">
+        {copy.words.map((w) => <li><a href={localePath(lang, w.key) + w.hash}>{w.label}</a></li>)}
+      </ul>
+      <p class="lead">{copy.lead}</p>
+      <ul class="hero__meta">
+        <li><Icon name="pin" />{site.address.street}, {site.address.city}</li>
+        <li><Icon name="clock" />{copy.metaHours}</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pillars-title">
+    <div class="container">
+      <h2 id="pillars-title" class="center">{copy.pillarsTitle}</h2>
+      <div class="grid grid--3">
+        {
+          copy.pillars.map((p) => (
+            <article class="card pillar">
+              <Picture src={p.img} formats={['avif', 'webp']} width={640} height={480} sizes="(min-width: 56rem) 22rem, (min-width: 40rem) 50vw, calc(100vw - 2rem)" alt={p.alt} loading="lazy" />
+              <div class="card__body">
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+                <a href={localePath(lang, p.key) + (p.hash ?? '')}>{p.cta}</a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="about-title">
+    <div class="container media-split media-split--reverse">
+      <div>
+        <p class="eyebrow">{copy.aboutEyebrow}</p>
+        <h2 id="about-title">{copy.aboutTitle}</h2>
+        <p>{copy.aboutP1}</p>
+        <p>{copy.aboutP2}</p>
+        <ul class="check-list">
+          {copy.aboutList.map((item) => <li><Icon name="check" />{item}</li>)}
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--outline" href={localePath(lang, 'cuisine')}>{copy.aboutCta}</a>
+        </div>
+      </div>
+      <Picture src={bowlImg} formats={['avif', 'webp']} width={800} height={600} sizes="(min-width: 56rem) 34rem, calc(100vw - 2rem)" alt={copy.aboutAlt} loading="lazy" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="menu-title">
+    <div class="container">
+      <div class="media-split">
+        <div>
+          <p class="eyebrow">{copy.menuEyebrow}</p>
+          <h2 id="menu-title">{copy.menuTitle}</h2>
+          <p class="lead">{copy.menuNote}</p>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={localePath(lang, 'menu')}>{copy.menuCta}</a>
+          </div>
+        </div>
+        <ul class="menu-list notice">
+          {
+            highlights.map((item) => (
+              <li class="dish">
+                <div>
+                  <span class="dish__name">{item.name[lang]}</span>
+                  {item.tags?.includes('sl') && <span class="tag tag--sl"><span aria-hidden="true">🇱🇰</span><span class="visually-hidden">{t('tags.sl')}</span></span>}
+                  {item.desc && <p class="dish__desc">{item.desc[lang]}</p>}
+                </div>
+                {item.price !== undefined && <span class="dish__price">{formatPrice(item.price, lang)}</span>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--green" aria-labelledby="events-title">
+    <div class="container center">
+      <p class="eyebrow">{copy.eventsEyebrow}</p>
+      <h2 id="events-title">{copy.eventsTitle}</h2>
+      <p class="lead">{copy.eventsText}</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--primary" href={localePath(lang, 'events')}>{copy.eventsCta}</a>
+        <a class="btn btn--outline" href={site.social.instagram} rel="noopener" target="_blank"><Icon name="instagram" />{copy.eventsInsta}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="info-title">
+    <div class="container">
+      <h2 id="info-title">{copy.infoTitle}</h2>
+      <div class="grid grid--2">
+        <div class="notice">
+          <Hours lang={lang} />
+          <p class="menu-footnote" style="margin-bottom:0">{t('hours.summary')}</p>
+        </div>
+        <div>
+          <ul class="info-list" style="margin-bottom:1.25rem">
+            <li>
+              <Icon name="pin" />
+              <address>
+                <span class="label">{t('address.title')}</span>
+                {site.address.street}, {site.address.postalCode} {site.address.city}
+              </address>
+            </li>
+            <li>
+              <Icon name="phone" />
+              <span><span class="label">{t('phone.title')}</span><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a> · <a href={`tel:${site.mobile.tel}`}>{site.mobile.display}</a></span>
+            </li>
+            <li>
+              <Icon name="mail" />
+              <span><span class="label">{t('email.title')}</span><a href={`mailto:${site.email}`}>{site.email}</a></span>
+            </li>
+          </ul>
+          <MapCard lang={lang} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-title">
+    <div class="container">
+      <h2 id="faq-title" class="center">{copy.faqTitle}</h2>
+      <Faq items={copy.faq} />
+    </div>
+  </section>
+
+  <CtaBand lang={lang} />
+</Base>

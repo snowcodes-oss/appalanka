@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { useT } from '../i18n/ui';
+import type { Lang } from '../data/menu';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const links = [
+  { href: site.social.instagram, icon: 'instagram', label: t('social.instagram') },
+  { href: site.social.facebook, icon: 'facebook', label: t('social.facebook') },
+  { href: site.social.tiktok, icon: 'tiktok', label: t('social.tiktok') },
+] as const;
+---
+
+<ul class="social">
+  {
+    links.map((l) => (
+      <li>
+        <a href={l.href} rel="noopener" target="_blank" aria-label={l.label}>
+          <Icon name={l.icon} />
+        </a>
+      </li>
+    ))
+  }
+</ul>

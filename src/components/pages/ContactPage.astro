@@ -1,0 +1,150 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import Hours from '../Hours.astro';
+import MapCard from '../MapCard.astro';
+import Social from '../Social.astro';
+import heroImg from '../../assets/images/cocktails.jpg';
+import { site } from '../../data/site';
+import type { Lang } from '../../data/menu';
+import { useT } from '../../i18n/ui';
+import { localePath } from '../../i18n/config.js';
+import { breadcrumbJsonLd } from '../../i18n/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+
+const copy = {
+  fr: {
+    title: 'Contact, horaires & réservation | Appa Lanka Conques-sur-Orbiel',
+    description:
+      'Réservez votre table chez Appa Lanka au 09 88 58 43 38. Horaires d’ouverture, adresse (2 rue Jean Ferrat, 11600 Conques-sur-Orbiel), itinéraire depuis Carcassonne, parking et accessibilité.',
+    h1: 'Contact, horaires & réservation',
+    lead: 'Pour réserver une table, organiser un événement ou simplement poser une question, le plus simple est de nous appeler.',
+    bookTitle: 'Réserver une table',
+    bookText: 'Réservation conseillée le week-end, les soirs d’événement et pour les groupes. Mardi soir et samedi midi : ouverture sur réservation uniquement.',
+    hoursTitle: 'Horaires d’ouverture',
+    findTitle: 'Nous trouver',
+    mobile: 'Mobile',
+    goodTitle: 'Bon à savoir',
+    good: [
+      { icon: 'card', text: 'Paiement : carte bancaire, espèces, tickets restaurant, virement.' },
+      { icon: 'access', text: 'Établissement accessible aux personnes à mobilité réduite (entrée, salle, sanitaires).' },
+      { icon: 'parking', text: 'Stationnement gratuit dans la rue et sur le parking à proximité.' },
+      { icon: 'leaf', text: 'Terrasse aux beaux jours. Options végétariennes et menu enfant à 12 €.' },
+      { icon: 'paw', text: 'Animaux acceptés. Chaises hautes disponibles.' },
+      { icon: 'wifi', text: 'Wi-Fi gratuit. Diffusion des grands matchs au bar.' },
+      { icon: 'users', text: 'Privatisation possible : banquets, séminaires, anniversaires, repas d’entreprise.' },
+      { icon: 'gift', text: 'Programme fidélité : cumulez des avantages à chaque visite.' },
+    ],
+    loyalty: 'Rejoindre le programme fidélité',
+    fromCarcassonne: 'Venir depuis Carcassonne',
+    heroAlt: 'Cocktails colorés que l’on trinque au bar d’Appa Lanka',
+  },
+  en: {
+    title: 'Contact, hours & booking | Appa Lanka Conques-sur-Orbiel',
+    description:
+      'Book your table at Appa Lanka on +33 9 88 58 43 38. Opening hours, address (2 rue Jean Ferrat, 11600 Conques-sur-Orbiel), directions from Carcassonne, parking and accessibility.',
+    h1: 'Contact, hours & booking',
+    lead: 'To book a table, organise an event or simply ask a question, the easiest way is to call us.',
+    bookTitle: 'Book a table',
+    bookText: 'Booking recommended at weekends, on event nights and for groups. Tuesday evening and Saturday lunch: open by reservation only.',
+    hoursTitle: 'Opening hours',
+    findTitle: 'Find us',
+    mobile: 'Mobile',
+    goodTitle: 'Good to know',
+    good: [
+      { icon: 'card', text: 'Payment: bank card, cash, meal vouchers, bank transfer.' },
+      { icon: 'access', text: 'Wheelchair accessible (entrance, dining room, toilets).' },
+      { icon: 'parking', text: 'Free parking on the street and in the nearby car park.' },
+      { icon: 'leaf', text: 'Terrace in fine weather. Vegetarian options and a €12 kids menu.' },
+      { icon: 'paw', text: 'Pets welcome. High chairs available.' },
+      { icon: 'wifi', text: 'Free Wi-Fi. Big games shown at the bar.' },
+      { icon: 'users', text: 'Private hire available: banquets, seminars, birthdays, company meals.' },
+      { icon: 'gift', text: 'Loyalty programme: collect rewards with every visit.' },
+    ],
+    loyalty: 'Join the loyalty programme',
+    fromCarcassonne: 'Getting here from Carcassonne',
+    heroAlt: 'Colourful cocktails clinked together at the Appa Lanka bar',
+  },
+}[lang];
+
+const crumbs = [
+  { label: t('nav.home'), href: localePath(lang, 'home') },
+  { label: t('nav.contact') },
+];
+---
+
+<Base lang={lang} routeKey="contact" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs)]}>
+  <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} image={heroImg} imageAlt={copy.heroAlt} short />
+
+  <section class="section section--tight" aria-labelledby="book-title">
+    <div class="container">
+      <div class="notice center">
+        <h2 id="book-title">{copy.bookTitle}</h2>
+        <p><a class="big-phone" href={`tel:${site.phone.tel}`}>{site.phone.display}</a></p>
+        <p class="lead" style="margin-inline:auto">{copy.bookText}</p>
+        <div class="btn-row" style="justify-content:center">
+          <a class="btn btn--primary" href={`tel:${site.phone.tel}`}><Icon name="phone" />{t('cta.call')} {site.phone.display}</a>
+          <a class="btn btn--outline" href={`mailto:${site.email}`}><Icon name="mail" />{site.email}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="hours-title">
+    <div class="container grid grid--2">
+      <div>
+        <h2 id="hours-title">{copy.hoursTitle}</h2>
+        <div class="notice">
+          <Hours lang={lang} hideCaption />
+          <p class="menu-footnote" style="margin-bottom:0">{t('hours.summary')}</p>
+        </div>
+      </div>
+      <div>
+        <h2>{copy.findTitle}</h2>
+        <ul class="info-list" style="margin-bottom:1.25rem">
+          <li>
+            <Icon name="pin" />
+            <address>
+              <span class="label">{t('address.title')}</span>
+              <strong>{site.name}</strong><br />
+              {site.address.street}<br />
+              {site.address.postalCode} {site.address.city}
+            </address>
+          </li>
+          <li>
+            <Icon name="phone" />
+            <span><span class="label">{t('phone.title')}</span><a href={`tel:${site.phone.tel}`}>{site.phone.display}</a><br /><span class="label">{copy.mobile}</span><a href={`tel:${site.mobile.tel}`}>{site.mobile.display}</a></span>
+          </li>
+          <li>
+            <Icon name="mail" />
+            <span><span class="label">{t('email.title')}</span><a href={`mailto:${site.email}`}>{site.email}</a></span>
+          </li>
+          <li>
+            <Icon name="instagram" />
+            <span><span class="label">{t('social.title')}</span><Social lang={lang} /></span>
+          </li>
+        </ul>
+        <MapCard lang={lang} />
+        <p style="margin-top:1rem"><a href={localePath(lang, 'carcassonne')}>{copy.fromCarcassonne}</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="good-title">
+    <div class="container">
+      <h2 id="good-title">{copy.goodTitle}</h2>
+      <ul class="info-list grid--2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))">
+        {copy.good.map((g) => <li><Icon name={g.icon as any} /><span>{g.text}</span></li>)}
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--outline" href={site.loyaltyUrl} rel="noopener" target="_blank"><Icon name="gift" />{copy.loyalty}</a>
+      </div>
+    </div>
+  </section>
+</Base>
