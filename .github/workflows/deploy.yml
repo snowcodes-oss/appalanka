@@ -1,7 +1,16 @@
 name: Deploy
 
 # Publie le site sur GitHub Pages à chaque push sur main.
-# Le domaine personnalisé est déclaré par public/CNAME, copié tel quel dans dist.
+#
+# `configure-pages` renvoie l'URL réellement servie : aujourd'hui la « project
+# page » https://snowcodes-oss.github.io/appalanka/, et automatiquement
+# https://www.appalanka.fr/ le jour où le domaine personnalisé est déclaré dans
+# Settings > Pages. Le build s'aligne dessus via SITE_URL / BASE_PATH, sans quoi
+# tous les chemins absolus (/carte/, /_astro/…) pointent vers la racine du
+# domaine et renvoient des 404.
+#
+# Attention : avec un déploiement par Actions, public/CNAME ne configure PAS le
+# domaine — il se règle dans Settings > Pages (plus les enregistrements DNS).
 on:
   push:
     branches: [main]
@@ -22,12 +31,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        id: pages
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          SITE_URL: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

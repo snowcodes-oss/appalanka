@@ -1,5 +1,30 @@
 // Plain JS (no TS) because astro.config.mjs imports it at build time.
-export const SITE_URL = 'https://www.appalanka.fr';
+
+/** Domaine de production. */
+const PRODUCTION_SITE = 'https://www.appalanka.fr';
+
+// Un déploiement d'aperçu (GitHub Pages en « project page ») sert le site sous
+// un sous-chemin : le workflow passe alors SITE_URL et BASE_PATH. Sans ces
+// variables, on construit pour le domaine final, servi à la racine.
+const env = typeof process !== 'undefined' && process.env ? process.env : {};
+
+/** Origine du site déployé, sans barre oblique finale. */
+export const SITE_URL = (env.SITE_URL || PRODUCTION_SITE).replace(/\/+$/, '');
+
+/** Sous-chemin de déploiement, toujours de la forme `/` ou `/segment/`. */
+export const BASE_PATH = (() => {
+  const trimmed = (env.BASE_PATH || '').replace(/^\/+|\/+$/g, '');
+  return trimmed ? `/${trimmed}/` : '/';
+})();
+
+/** Vrai uniquement pour le build du domaine final : les aperçus restent hors index. */
+export const IS_PRODUCTION = SITE_URL === PRODUCTION_SITE;
+
+/** Préfixe un chemin interne (`/og-image.jpg`) avec le sous-chemin de déploiement. */
+export function withBase(path) {
+  return BASE_PATH + String(path).replace(/^\/+/, '');
+}
+
 export const DEFAULT_LOCALE = 'fr';
 export const LOCALES = ['fr', 'en'];
 
@@ -20,8 +45,8 @@ export const ROUTES = {
 /** Absolute path (with trailing slash) for a route key in a given locale. */
 export function localePath(locale, key) {
   const slug = ROUTES[key][locale];
-  const prefix = locale === DEFAULT_LOCALE ? '' : `/${locale}`;
-  return slug ? `${prefix}/${slug}/` : `${prefix}/`;
+  const prefix = locale === DEFAULT_LOCALE ? '' : `${locale}/`;
+  return withBase(`${prefix}${slug ? `${slug}/` : ''}`);
 }
 
 /** Find the route key + locale for an absolute path such as "/en/menu/". */

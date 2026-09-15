@@ -1,16 +1,20 @@
 import type { Lang } from '../data/menu';
 import { site } from '../data/site';
 import { menuGroups, type MenuGroup } from '../data/menu';
-import { SITE_URL, LOCALES, DEFAULT_LOCALE, localePath, type ROUTES } from './config.js';
+import { SITE_URL, LOCALES, DEFAULT_LOCALE, localePath, withBase, type ROUTES } from './config.js';
 
 export type RouteKey = keyof typeof ROUTES;
 
 export const HREFLANG: Record<Lang, string> = { fr: 'fr-FR', en: 'en' };
 export const OG_LOCALE: Record<Lang, string> = { fr: 'fr_FR', en: 'en_GB' };
 
+/** `path` must already carry the deployment base (cf. `localePath` / `withBase`). */
 export function absoluteUrl(path: string): string {
   return new URL(path, SITE_URL).href;
 }
+
+/** Racine du site déployé, sous-chemin compris. */
+const siteRoot = absoluteUrl(withBase('/'));
 
 export function alternates(routeKey: RouteKey) {
   const list = (LOCALES as Lang[]).map((locale) => ({
@@ -53,13 +57,13 @@ export function restaurantJsonLd(lang: Lang) {
   return {
     '@context': 'https://schema.org',
     '@type': ['Restaurant', 'BarOrPub'],
-    '@id': `${SITE_URL}/#restaurant`,
+    '@id': `${siteRoot}#restaurant`,
     name: site.name,
     alternateName: site.legalName,
     description: descriptions[lang],
     url: absoluteUrl(localePath(lang, 'home')),
-    image: [absoluteUrl('/og-image.jpg')],
-    logo: absoluteUrl('/icon-512.png'),
+    image: [absoluteUrl(withBase('/og-image.jpg'))],
+    logo: absoluteUrl(withBase('/icon-512.png')),
     telephone: site.phone.tel,
     email: site.email,
     address: {
@@ -98,11 +102,11 @@ export function websiteJsonLd(lang: Lang) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    '@id': `${SITE_URL}/#website`,
-    url: SITE_URL + '/',
+    '@id': `${siteRoot}#website`,
+    url: siteRoot,
     name: site.name,
     inLanguage: HREFLANG[lang],
-    publisher: { '@id': `${SITE_URL}/#restaurant` },
+    publisher: { '@id': `${siteRoot}#restaurant` },
   };
 }
 

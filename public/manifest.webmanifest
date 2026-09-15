@@ -2,13 +2,13 @@
   "name": "Appa Lanka – Restaurant & bar à cocktails",
   "short_name": "Appa Lanka",
   "description": "Restaurant et bar à cocktails à Conques-sur-Orbiel, près de Carcassonne.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "browser",
   "lang": "fr",
   "background_color": "#faf6ef",
   "theme_color": "#114237",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

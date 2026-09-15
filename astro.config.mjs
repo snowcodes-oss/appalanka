@@ -1,11 +1,14 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import { SITE_URL, LOCALES, DEFAULT_LOCALE } from './src/i18n/config.js';
+import { SITE_URL, BASE_PATH, LOCALES, DEFAULT_LOCALE } from './src/i18n/config.js';
 import { sitemapAlternates } from './src/i18n/sitemap.js';
 
 export default defineConfig({
   site: SITE_URL,
+  // '/' pour le domaine final ; '/<repo>/' quand GitHub Pages sert le site
+  // sous un sous-chemin (cf. SITE_URL / BASE_PATH dans src/i18n/config.js).
+  base: BASE_PATH,
   trailingSlash: 'always',
   compressHTML: true,
   build: {
