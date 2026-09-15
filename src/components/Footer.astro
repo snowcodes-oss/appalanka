@@ -1,8 +1,6 @@
 ---
-import { Image } from 'astro:assets';
 import Social from './Social.astro';
-import MapCard from './MapCard.astro';
-import logoSecondaire from '../assets/logo-secondaire.png';
+import logo from '../assets/logo.svg';
 import { site } from '../data/site';
 import { useT } from '../i18n/ui';
 import { localePath } from '../i18n/config.js';
@@ -10,62 +8,71 @@ import type { RouteKey } from '../i18n/seo';
 import type { Lang } from '../data/menu';
 
 /**
- * Pied de page repris du site en ligne : « Suivez-nous » centré, icônes
- * sociales, puis le plan et le logo secondaire avec l'adresse en Amatic SC,
- * téléphone et courriel en orange.
+ * Pied de page en colonnes, avec le nom de la maison composé en très grand
+ * au ras du bas.
  */
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useT(lang);
-const nav: Array<{ key: RouteKey; label: string }> = [
-  { key: 'home', label: t('nav.home') },
-  { key: 'menu', label: t('nav.menu') },
-  { key: 'cuisine', label: t('nav.cuisine') },
-  { key: 'events', label: t('nav.events') },
-  { key: 'carcassonne', label: t('nav.carcassonne') },
-  { key: 'contact', label: t('nav.contact') },
-  { key: 'legal', label: t('nav.legal') },
+const cols: Array<{ title: string; links: Array<{ key: RouteKey; label: string }> }> = [
+  {
+    title: t('footer.nav'),
+    links: [
+      { key: 'menu', label: t('nav.menu') },
+      { key: 'events', label: t('nav.events') },
+    ],
+  },
+  {
+    title: t('footer.info'),
+    links: [
+      { key: 'contact', label: t('nav.contact') },
+      { key: 'carcassonne', label: t('nav.carcassonne') },
+      { key: 'legal', label: t('nav.legal') },
+    ],
+  },
 ];
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <div class="container">
-    <h2>{t('social.title')}</h2>
-    <Social lang={lang} />
-
     <div class="footer-grid">
-      <div class="footer-map">
-        <MapCard lang={lang} />
-      </div>
-      <div class="footer-brand">
-        <Image
-          src={logoSecondaire}
-          width={512}
-          height={256}
-          alt={`${site.name} – ${t('tagline')}`}
-          loading="lazy"
-        />
+      {
+        cols.map((col) => (
+          <div>
+            <h2>{col.title}</h2>
+            <ul>
+              {col.links.map((l) => <li><a href={localePath(lang, l.key)}>{l.label}</a></li>)}
+            </ul>
+          </div>
+        ))
+      }
+      <div>
+        <h2>{t('address.title')}</h2>
         <address class="footer-address">
           <span class="street">{site.address.street}<br />{site.address.postalCode} {site.address.city}</span>
-          <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a><br />
+          <a href={`tel:${site.phone.tel}`}>{site.phone.display}</a>
           <a href={`mailto:${site.email}`}>{site.email}</a>
         </address>
       </div>
+      <div class="footer-wide">
+        <h2>{t('social.title')}</h2>
+        <p class="footer-note">{t('footer.about')}</p>
+        <Social lang={lang} />
+        <p class="footer-note" style="margin-top:1rem">
+          <a href={site.loyaltyUrl} rel="noopener" target="_blank">{t('footer.loyalty')}</a>
+        </p>
+      </div>
     </div>
-
-    <nav aria-label={t('footer.nav')}>
-      <ul class="footer-nav">
-        {nav.map((item) => <li><a href={localePath(lang, item.key)}>{item.label}</a></li>)}
-        <li><a href={site.loyaltyUrl} rel="noopener" target="_blank">{t('footer.loyalty')}</a></li>
-      </ul>
-    </nav>
 
     <div class="footer-bottom">
       <p>© {year} {site.name}. {t('footer.rights')}</p>
       <p>{t('footer.alcohol')}</p>
     </div>
   </div>
+  <p class="footer-wordmark" aria-hidden="true">
+    <img src={logo.src} width="2500" height="1078" alt="" loading="lazy" />
+  </p>
 </footer>

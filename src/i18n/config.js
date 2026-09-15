@@ -11,7 +11,6 @@ export const LOCALES = ['fr', 'en'];
 export const ROUTES = {
   home: { fr: '', en: '' },
   menu: { fr: 'carte', en: 'menu' },
-  cuisine: { fr: 'cuisine-sri-lankaise', en: 'sri-lankan-cuisine' },
   events: { fr: 'evenements', en: 'events' },
   carcassonne: { fr: 'restaurant-carcassonne', en: 'restaurant-carcassonne' },
   contact: { fr: 'contact', en: 'contact' },

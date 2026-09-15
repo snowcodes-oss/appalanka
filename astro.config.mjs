@@ -22,17 +22,17 @@ export default defineConfig({
     layout: 'constrained',
     responsiveStyles: true,
   },
-  // Le site en ligne utilise Amatic SC 400 en titrage et aktiv-grotesk 400 en
-  // texte courant. Aktiv Grotesk est une police Adobe sous licence, qui ne peut
-  // pas être auto-hébergée : Inter, néo-grotesque très proche, la remplace.
+  // Titrage : Fraunces, serif chaleureux à empattements francs.
+  // Texte courant : Inter. Le lettrage dessiné de la marque reste porté par
+  // le logo, qui est un SVG.
   fonts: [
     {
       provider: fontProviders.local(),
-      name: 'Amatic SC',
-      cssVariable: '--font-amatic',
-      fallbacks: ['cursive'],
+      name: 'Fraunces',
+      cssVariable: '--font-fraunces',
+      fallbacks: ['Georgia', 'serif'],
       options: {
-        variants: [{ src: ['./src/assets/fonts/amatic-sc-400.woff2'], weight: 400, style: 'normal' }],
+        variants: [{ src: ['./src/assets/fonts/fraunces-700.woff2'], weight: 700, style: 'normal' }],
       },
     },
     {

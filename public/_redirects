@@ -13,5 +13,8 @@
 /evenements/dj-party            /evenements/   301
 /evenements/concert-live-show   /evenements/   301
 /cart               /                    301
+# Page « cuisine sri-lankaise » retirée -> la carte
+/cuisine-sri-lankaise    /carte/    301
+/en/sri-lankan-cuisine   /en/menu/  301
 # Apex domain -> www (only used by hosts that support it here; otherwise configure at DNS/host level)
 https://appalanka.fr/*   https://www.appalanka.fr/:splat   301

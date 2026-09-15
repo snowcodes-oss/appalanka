@@ -8,8 +8,9 @@ import type { RouteKey } from '../i18n/seo';
 import type { Lang } from '../data/menu';
 
 /**
- * En-tête repris du site en ligne : fond transparent posé sur la bannière,
- * logo à gauche, navigation discrète et icônes sociales à droite.
+ * Bandeau d'annonce puis navigation en pilule flottante posée sur la
+ * bannière : logo à gauche, liens au centre, réseaux et bouton d'appel
+ * à droite.
  */
 interface Props {
   lang: Lang;
@@ -19,80 +20,108 @@ const { lang, routeKey } = Astro.props;
 const t = useT(lang);
 const other = otherLang(lang);
 const nav: Array<{ key: RouteKey; label: string }> = [
-  { key: 'home', label: t('nav.home') },
   { key: 'menu', label: t('nav.menu') },
-  { key: 'cuisine', label: t('nav.cuisine') },
   { key: 'events', label: t('nav.events') },
   { key: 'contact', label: t('nav.contact') },
 ];
 const socials = [
   { href: site.social.instagram, icon: 'instagram', label: t('social.instagram') },
   { href: site.social.facebook, icon: 'facebook', label: t('social.facebook') },
-  { href: site.social.tiktok, icon: 'tiktok', label: t('social.tiktok') },
 ] as const;
 ---
 
+<div class="announce">
+  {t('announce.hours')} · <a href={`tel:${site.phone.tel}`}>{t('announce.book')} {site.phone.display}</a>
+</div>
+
 <header class="site-header" id="site-header">
   <div class="container">
-    <a class="brand" href={localePath(lang, 'home')} aria-label={`${site.name} – ${t('nav.home')}`}>
-      <img src={logo.src} width="278" height="120" alt={site.name} fetchpriority="high" />
-    </a>
-    <button
-      class="nav-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="site-nav"
-      aria-label={t('nav.open')}
-      data-nav-toggle
-      data-open-label={t('nav.open')}
-      data-close-label={t('nav.close')}
-    >
-      <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
-    </button>
-    <nav class="site-nav" id="site-nav" aria-label={t('nav.label')}>
-      <ul>
-        {
-          nav.map((item) => (
-            <li>
-              <a href={localePath(lang, item.key)} aria-current={item.key === routeKey ? 'page' : undefined}>
-                {item.label}
-              </a>
-            </li>
-          ))
-        }
-        <li>
-          <a class="nav-phone" href={`tel:${site.phone.tel}`} aria-label={`${t('cta.call')} ${site.phone.display}`}>
-            <Icon name="phone" />
-            {site.phone.display}
-          </a>
-        </li>
-        <li>
-          <ul class="nav-social">
-            {
-              socials.map((s) => (
-                <li>
-                  <a class="social-link" href={s.href} rel="noopener" target="_blank" aria-label={s.label}>
-                    <Icon name={s.icon} />
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </li>
-        <li>
-          <a
-            class="lang-switch"
-            href={localePath(other, routeKey)}
-            hreflang={other}
-            lang={other}
-            aria-label={t('lang.switch')}
-            title={t('lang.switch')}
-          >
-            {t('lang.short')}
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <div class="nav-pill">
+      <a class="brand" href={localePath(lang, 'home')} aria-label={`${site.name} – ${t('nav.home')}`}>
+        <img src={logo.src} width="200" height="86" alt={site.name} fetchpriority="high" />
+      </a>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label={t('nav.open')}
+        data-nav-toggle
+        data-open-label={t('nav.open')}
+        data-close-label={t('nav.close')}
+      >
+        <span class="nav-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label={t('nav.label')}>
+        <ul>
+          <li class="nav-home-link">
+            <a href={localePath(lang, 'home')} aria-current={routeKey === 'home' ? 'page' : undefined}>{t('nav.home')}</a>
+          </li>
+          {
+            nav.map((item) => (
+              <li>
+                <a href={localePath(lang, item.key)} aria-current={item.key === routeKey ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <ul class="nav-social">
+              {
+                socials.map((s) => (
+                  <li>
+                    <a class="social-link" href={s.href} rel="noopener" target="_blank" aria-label={s.label}>
+                      <Icon name={s.icon} />
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </li>
+          <li>
+            <a
+              class="lang-switch"
+              href={localePath(other, routeKey)}
+              hreflang={other}
+              lang={other}
+              aria-label={t('lang.switch')}
+              title={t('lang.switch')}
+            >
+              {t('lang.short')}
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="nav-end">
+        <ul class="nav-social nav-social--pill">
+          {
+            socials.map((s) => (
+              <li>
+                <a class="social-link" href={s.href} rel="noopener" target="_blank" aria-label={s.label}>
+                  <Icon name={s.icon} />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          class="lang-switch lang-switch--pill"
+          href={localePath(other, routeKey)}
+          hreflang={other}
+          lang={other}
+          aria-label={t('lang.switch')}
+          title={t('lang.switch')}
+        >
+          {t('lang.short')}
+        </a>
+        <a class="nav-cta" href={`tel:${site.phone.tel}`}>
+          <Icon name="phone" />
+          <span class="nav-cta__label">{t('cta.book')}</span>
+          <span class="visually-hidden nav-cta__sr">{site.phone.display}</span>
+        </a>
+      </div>
+    </div>
   </div>
 </header>
 <noscript
@@ -115,9 +144,12 @@ const socials = [
     if (!h || !nav || !b) return;
     var mq = window.matchMedia('(max-width: 68rem)');
     var root = document.documentElement;
+    var ann = document.querySelector('.announce');
 
     function measure() {
-      root.style.setProperty('--header-h', h.offsetHeight + 'px');
+      root.style.setProperty('--header-h', Math.round(h.getBoundingClientRect().bottom) + 'px');
+      // La bannière d'accueil occupe l'écran moins ce bandeau.
+      if (ann) root.style.setProperty('--announce-h', Math.round(ann.getBoundingClientRect().height) + 'px');
     }
 
     // Resolved on each call: this script runs while parsing the header, so
@@ -139,8 +171,11 @@ const socials = [
     measure();
     // Keeps --header-h accurate whatever changes the bar's height
     // (viewport, font loading, wrapping).
-    if (window.ResizeObserver) new ResizeObserver(measure).observe(h);
-    else window.addEventListener('resize', measure);
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(measure);
+      ro.observe(h);
+      if (ann) ro.observe(ann);
+    } else window.addEventListener('resize', measure);
 
     // Leaving the burger range (rotation, window resize) must never leave the
     // page stuck behind an open panel that can no longer be closed.

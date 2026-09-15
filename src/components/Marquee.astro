@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Bandeau défilant. La liste est dupliquée pour que le défilement boucle
+ * sans saut ; la copie est masquée aux technologies d'assistance.
+ */
+interface Props {
+  items: Array<{ icon: string; label: string }>;
+  label: string;
+}
+const { items, label } = Astro.props;
+---
+
+<div class="marquee" role="group" aria-label={label}>
+  <div class="marquee__track">
+    {
+      items.map((i) => (
+        <span class="marquee__item">
+          <Icon name={i.icon as any} />
+          {i.label}
+        </span>
+      ))
+    }
+    {
+      items.map((i) => (
+        <span class="marquee__item" aria-hidden="true">
+          <Icon name={i.icon as any} />
+          {i.label}
+        </span>
+      ))
+    }
+  </div>
+</div>

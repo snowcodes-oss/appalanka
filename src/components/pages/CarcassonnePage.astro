@@ -6,13 +6,14 @@ import CtaBand from '../CtaBand.astro';
 import Icon from '../Icon.astro';
 import Hours from '../Hours.astro';
 import MapCard from '../MapCard.astro';
+import Faq from '../Faq.astro';
 import roomImg from '../../assets/images/salle-bar-portrait.jpg';
 import heroImg from '../../assets/images/salle-bar.jpg';
 import { site } from '../../data/site';
 import type { Lang } from '../../data/menu';
 import { useT } from '../../i18n/ui';
 import { localePath } from '../../i18n/config.js';
-import { breadcrumbJsonLd } from '../../i18n/seo';
+import { breadcrumbJsonLd, faqJsonLd } from '../../i18n/seo';
 
 interface Props {
   lang: Lang;
@@ -45,6 +46,37 @@ const copy = {
     aroundAlt: 'La salle d’Appa Lanka avec son bar en briques, ses lampes en rotin et ses plantes suspendues',
     hoursTitle: 'Horaires',
     mapTitle: 'Itinéraire',
+    faqTitle: 'Questions fréquentes sur l’accès depuis Carcassonne',
+    faq: [
+      {
+        q: 'Appa Lanka se trouve-t-il dans Carcassonne ?',
+        a: 'Non. Le restaurant est à Conques-sur-Orbiel, un village de l’Aude situé à environ 10 km au nord-est de Carcassonne. Comptez 15 minutes de route depuis la Bastide Saint-Louis et 20 minutes depuis la Cité médiévale.',
+      },
+      {
+        q: 'Combien de temps faut-il pour venir depuis la Cité de Carcassonne ?',
+        a: 'Environ 20 minutes en voiture. Prenez la direction Mazamet / Montagne Noire par la D118, puis suivez Conques-sur-Orbiel. Le trajet se fait entièrement en dehors des zones piétonnes et des parkings payants de la Cité.',
+      },
+      {
+        q: 'Où se garer ?',
+        a: 'Le stationnement est gratuit, dans la rue et sur le parking à deux pas du restaurant. Contrairement au centre de Carcassonne, il n’y a ni horodateur ni zone bleue.',
+      },
+      {
+        q: 'Peut-on venir en bus ou en train depuis Carcassonne ?',
+        a: 'Le soir, il n’y a pas de transport en commun entre Carcassonne et Conques-sur-Orbiel. Pour un dîner, prévoyez une voiture, un taxi ou un VTC ; le stationnement est gratuit devant le restaurant.',
+      },
+      {
+        q: 'Existe-t-il un restaurant sri-lankais à Carcassonne ?',
+        a: 'La cuisine sri-lankaise reste rare dans le Carcassonnais. Chez Appa Lanka, le chef, né au Sri Lanka, prépare currys, biryanis, kottu et hoppers à 15 minutes de Carcassonne, à côté d’une carte traditionnelle revisitée.',
+      },
+      {
+        q: 'Jusqu’à quelle heure sert-on le soir ?',
+        a: 'Le service du soir commence à 18 h. Le bar reste ouvert jusqu’à minuit du mercredi au samedi, et jusqu’à 2 h le vendredi. Une bonne option quand les cuisines ferment tôt à Carcassonne.',
+      },
+      {
+        q: 'Que visiter dans le secteur avant de dîner ?',
+        a: 'Conques-sur-Orbiel est sur la route du gouffre géant de Cabrespine et de la grotte de Limousis, à un quart d’heure au nord. La Cité de Carcassonne et le Canal du Midi à Trèbes sont à une dizaine de kilomètres.',
+      },
+    ],
     heroAlt: 'La salle d’Appa Lanka et son bar en briques éclairé, à Conques-sur-Orbiel',
   },
   en: {
@@ -71,6 +103,37 @@ const copy = {
     aroundAlt: 'The Appa Lanka dining room with its brick bar, rattan lamps and hanging plants',
     hoursTitle: 'Opening hours',
     mapTitle: 'Directions',
+    faqTitle: 'Frequently asked questions about getting here from Carcassonne',
+    faq: [
+      {
+        q: 'Is Appa Lanka in Carcassonne itself?',
+        a: 'No. The restaurant is in Conques-sur-Orbiel, a village in the Aude about 10 km north-east of Carcassonne. Allow 15 minutes by car from the Bastide Saint-Louis and 20 minutes from the medieval Cité.',
+      },
+      {
+        q: 'How long does it take from the Cité de Carcassonne?',
+        a: 'About 20 minutes by car. Head for Mazamet / Montagne Noire on the D118, then follow signs to Conques-sur-Orbiel. The whole drive avoids the pedestrian zones and paid car parks around the Cité.',
+      },
+      {
+        q: 'Where can I park?',
+        a: 'Parking is free, both on the street and in the car park a few steps from the restaurant. Unlike central Carcassonne, there are no meters and no restricted zones.',
+      },
+      {
+        q: 'Can I get here by bus or train from Carcassonne?',
+        a: 'In the evening there is no public transport between Carcassonne and Conques-sur-Orbiel. For dinner, plan on a car, a taxi or a ride-hailing service; parking is free right outside the restaurant.',
+      },
+      {
+        q: 'Is there a Sri Lankan restaurant in Carcassonne?',
+        a: 'Sri Lankan cooking is still rare around Carcassonne. At Appa Lanka the chef, born in Sri Lanka, cooks curries, biryanis, kottu and hoppers 15 minutes from the city, alongside a revisited traditional menu.',
+      },
+      {
+        q: 'How late is food served in the evening?',
+        a: 'Dinner service starts at 6 pm. The bar stays open until midnight from Wednesday to Saturday, and until 2 am on Friday — useful when kitchens close early in Carcassonne.',
+      },
+      {
+        q: 'What is there to visit nearby before dinner?',
+        a: 'Conques-sur-Orbiel sits on the road to the giant Cabrespine chasm and the Limousis cave, a quarter of an hour to the north. The Cité de Carcassonne and the Canal du Midi at Trèbes are about ten kilometres away.',
+      },
+    ],
     heroAlt: 'The Appa Lanka dining room and its lit brick bar in Conques-sur-Orbiel',
   },
 }[lang];
@@ -81,7 +144,7 @@ const crumbs = [
 ];
 ---
 
-<Base lang={lang} routeKey="carcassonne" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs)]}>
+<Base lang={lang} routeKey="carcassonne" title={copy.title} description={copy.description} jsonLd={[breadcrumbJsonLd(crumbs), faqJsonLd(copy.faq)]}>
   <PageHeader lang={lang} title={copy.h1} lead={copy.lead} crumbs={crumbs} image={heroImg} imageAlt={copy.heroAlt} />
 
   <section class="section" aria-labelledby="why-title">
@@ -131,6 +194,13 @@ const crumbs = [
         </div>
       </div>
       <Picture src={roomImg} formats={['avif', 'webp']} width={720} height={900} sizes="(min-width: 56rem) 34rem, calc(100vw - 2rem)" alt={copy.aroundAlt} loading="lazy" style="aspect-ratio:4/5" />
+    </div>
+  </section>
+
+  <section class="section section--cream2" aria-labelledby="faq-title">
+    <div class="container">
+      <h2 id="faq-title" class="center">{copy.faqTitle}</h2>
+      <Faq items={copy.faq} />
     </div>
   </section>
 

@@ -454,7 +454,7 @@ export const highlights: MenuItem[] = [
   dinner.sections[1].items[3], // curry de poulet
   dinner.sections[1].items[2], // biryani saumon
   dinner.sections[1].items[1], // boeuf confit
-  dinner.sections[3].items[3], // hoppers
+  dinner.sections[3].items[0], // moelleux au chocolat
 ];
 
 export function formatPrice(value: number, lang: Lang): string {

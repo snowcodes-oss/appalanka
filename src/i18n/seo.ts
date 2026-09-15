@@ -26,6 +26,24 @@ const descriptions: Record<Lang, string> = {
   en: 'Restaurant and cocktail bar in Conques-sur-Orbiel, 10 minutes from Carcassonne. Revisited traditional cooking and Sri Lankan specialities, signature cocktails, live music, karaoke and events.',
 };
 
+/**
+ * Communes d'où viennent les clients (rayon ~15 min). Alimente `areaServed`
+ * dans les données structurées : cela aide Google à rattacher le restaurant
+ * au bassin de Carcassonne alors qu’il est situé à Conques-sur-Orbiel.
+ */
+const AREA_SERVED = [
+  'Conques-sur-Orbiel',
+  'Carcassonne',
+  'Villalier',
+  'Villemoustaussou',
+  'Bagnoles',
+  'Malves-en-Minervois',
+  'Trèbes',
+  'Villedubert',
+  'Berriac',
+  'Cabardès',
+];
+
 const amenities: Record<Lang, string[]> = {
   fr: ['Terrasse', 'Accès PMR', 'Wi-Fi gratuit', 'Parking gratuit', 'Animaux acceptés', 'Chaises hautes', 'Privatisation possible'],
   en: ['Terrace', 'Wheelchair accessible', 'Free Wi-Fi', 'Free parking', 'Pets welcome', 'High chairs', 'Private hire available'],
@@ -67,10 +85,7 @@ export function restaurantJsonLd(lang: Lang) {
     })),
     hasMenu: absoluteUrl(localePath(lang, 'menu')),
     sameAs: Object.values(site.social),
-    areaServed: [
-      { '@type': 'City', name: 'Conques-sur-Orbiel' },
-      { '@type': 'City', name: 'Carcassonne' },
-    ],
+    areaServed: AREA_SERVED.map((name) => ({ '@type': 'City', name })),
     amenityFeature: amenities[lang].map((name) => ({
       '@type': 'LocationFeatureSpecification',
       name,

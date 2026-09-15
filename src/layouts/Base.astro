@@ -60,7 +60,7 @@ const blocks = [restaurantJsonLd(lang), websiteJsonLd(lang), ...jsonLd];
     <meta name="geo.placename" content={site.address.city} />
     <meta name="geo.position" content={`${site.geo.latitude};${site.geo.longitude}`} />
     <meta name="ICBM" content={`${site.geo.latitude}, ${site.geo.longitude}`} />
-    <Font cssVariable="--font-amatic" preload />
+    <Font cssVariable="--font-fraunces" preload />
     <Font cssVariable="--font-inter" />
     {blocks.map((b) => <script is:inline type="application/ld+json" set:html={JSON.stringify(b)} />)}
   </head>
